@@ -25,7 +25,7 @@ router.get("/*", async (req, res, next) => {
   const splitPath = req.path.split("/");
   const name = splitPath[splitPath.length - 1];
 
-  const mode = req.body.mode;
+  const mode = req.query.mode;
   const stats = await fs.stat(pathname);
   if (mode === "info") {
     // send directory info
@@ -38,6 +38,12 @@ router.get("/*", async (req, res, next) => {
     return res.send(formattedInfo);
   }
 
+  if (mode === "download") {
+    if (stats.isDirectory()) return handleError(400)(req, res, next);
+    // download file
+    return res.download(pathname);
+  }
+
   if (stats.isDirectory()) {
     // send directory contents
     const contents = await fs.readdir(pathname, { withFileTypes: true });
@@ -47,11 +53,6 @@ router.get("/*", async (req, res, next) => {
         type: name.split(".").slice(1).join("."),
       }))
     );
-  }
-
-  if (mode === "download") {
-    // download file
-    return res.download(pathname);
   }
 
   // send file contents
@@ -107,12 +108,15 @@ router.put("/*", async (req, res, next) => {
 });
 
 router.post("/*", async (req, res, next) => {
-  const { newName, type, content, mode } = req.body;
-  if (!newName) return handleError(400)(req, res, next);
+  mode = req.files ? "upload" : req.body.mode;
+
+  const { newName, type, content } = req.body;
 
   const pathname = path.join(__dirname, "../files", req.path);
 
   if (mode === "copy") {
+    if (!newName) return handleError(400)(req, res, next);
+
     // copy file to new path
     const parentDirPath = path.join(__dirname, "../files", req.path, "..");
     const splitPath = req.path.split("/");
@@ -142,9 +146,11 @@ router.post("/*", async (req, res, next) => {
   }
 
   if (mode === "upload") {
+    console.log("got here");
     // upload every file within req.files
     for (let key in req.files) {
       const file = req.files[key];
+      console.log(file);
       const newPath = path.join(pathname, file.name);
       const err = await util.promisify(file.mv)(newPath);
       if (err) return handleError(500)(req, res, next);
@@ -152,6 +158,7 @@ router.post("/*", async (req, res, next) => {
   }
 
   if (mode === "create") {
+    if (!newName) return handleError(400)(req, res, next);
     if (type === "dir") {
       // make new directory with the given name
       const newPath = path.join(pathname, newName);
