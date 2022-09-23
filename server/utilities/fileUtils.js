@@ -7,7 +7,9 @@ async function formatInfo(name, isDir, stats, path) {
 
     return {
       Name: name,
-      Contents: `${contentCount[0]} directories and ${contentCount[1]} files`,
+      Contents: `${contentCount[0]} ${
+        contentCount[0] === 1 ? "directory" : "directories"
+      } and ${contentCount[1]} ${contentCount[1] === 1 ? "file" : "files"}`,
       "Birth time": stats.birthtime.toString(),
       "Last modified": stats.mtime.toString(),
       Path: path,
