@@ -9,6 +9,7 @@ const fileUtils = require("../utilities/fileUtils");
 // middleware - validate that the file/dir at path exists
 router.use(async (req, res, next) => {
   try {
+    if (req.path === "/") throw new Error();
     await fs.access(path.join(__dirname, "../files", req.path));
     next();
   } catch (error) {
@@ -53,6 +54,21 @@ router.get("/*", async (req, res, next) => {
 
   // send file contents
   return res.sendFile(pathname);
+});
+
+router.delete("/*", async (req, res, next) => {
+  const pathname = path.join(__dirname, "../files", req.path);
+  const parentDirPath = path.join(__dirname, "../files", req.path, "..");
+  await fs.rm(pathname, { recursive: true });
+  const parentDirContents = await fs.readdir(parentDirPath, {
+    withFileTypes: true,
+  });
+  return res.send(
+    parentDirContents.map(({ name }) => ({
+      name: name.split(".")[0],
+      type: name.split(".").slice(1).join("."),
+    }))
+  );
 });
 
 module.exports = router;
