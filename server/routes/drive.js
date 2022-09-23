@@ -51,9 +51,11 @@ router.get("/*", async (req, res, next) => {
     // send directory contents
     const contents = await fs.readdir(pathname, { withFileTypes: true });
     return res.send(
-      contents.map(({ name }) => ({
-        name: name.split(".")[0],
-        type: name.split(".").slice(1).join("."),
+      contents.map((ent) => ({
+        name: ent.name.split(".")[0],
+        type:
+          ent.name.split(".").slice(1).join(".") +
+          (ent.isDirectory() ? "dir" : ""),
       }))
     );
   }
