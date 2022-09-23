@@ -35,4 +35,6 @@ async function _countContents(path) {
   ];
 }
 
-module.exports = { formatInfo };
+const translatePath = (path) => path.replaceAll(/[+]|%20/g, " ");
+
+module.exports = { formatInfo, translatePath };

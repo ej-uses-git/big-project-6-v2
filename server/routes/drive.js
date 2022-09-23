@@ -10,9 +10,10 @@ const fileUtils = require("../utilities/fileUtils");
 
 // middleware - validate that the file/dir at path exists
 router.use(async (req, res, next) => {
+  const useablePath = fileUtils.translatePath(req.path);
   try {
-    if (req.path === "/" && req.method === "DELETE") throw new Error();
-    await fs.access(path.join(__dirname, "../files", req.path));
+    if (useablePath === "/" && req.method === "DELETE") throw new Error();
+    await fs.access(path.join(__dirname, "../files", useablePath));
     next();
   } catch (error) {
     return handleError(404)(req, res, next);
@@ -21,8 +22,10 @@ router.use(async (req, res, next) => {
 
 // route all GET requests
 router.get("/*", async (req, res, next) => {
-  const pathname = path.join(__dirname, "../files", req.path);
-  const splitPath = req.path.split("/");
+  const useablePath = fileUtils.translatePath(req.path);
+  const pathname = path.join(__dirname, "../files", useablePath);
+  console.log(pathname);
+  const splitPath = useablePath.split("/");
   const name = splitPath[splitPath.length - 1];
 
   const mode = req.query.mode;
@@ -61,12 +64,13 @@ router.get("/*", async (req, res, next) => {
 
 // route DELETE request
 router.delete("/*", async (req, res, next) => {
+  const useablePath = fileUtils.translatePath(req.path);
   // delete file
-  const pathname = path.join(__dirname, "../files", req.path);
+  const pathname = path.join(__dirname, "../files", useablePath);
   await fs.rm(pathname, { recursive: true });
 
   // send contents of parent directory
-  const parentDirPath = path.join(__dirname, "../files", req.path, "..");
+  const parentDirPath = path.join(__dirname, "../files", useablePath, "..");
   const parentDirContents = await fs.readdir(parentDirPath, {
     withFileTypes: true,
   });
@@ -84,11 +88,12 @@ router.put("/*", async (req, res, next) => {
   if (!req.body.newName) return handleError(400)(req, res, next);
 
   // rename file
-  const pathname = path.join(__dirname, "../files", req.path);
-  const splitPath = req.path.split("/");
+  const useablePath = fileUtils.translatePath(req.path);
+  const pathname = path.join(__dirname, "../files", useablePath);
+  const splitPath = useablePath.split("/");
   const type =
     splitPath[splitPath.length - 1].split(".").slice(1).join(".") || "";
-  const parentDirPath = path.join(__dirname, "../files", req.path, "..");
+  const parentDirPath = path.join(__dirname, "../files", useablePath, "..");
   const newPath = path.join(
     parentDirPath,
     req.body.newName + (type ? "." : "") + type
@@ -107,19 +112,21 @@ router.put("/*", async (req, res, next) => {
   );
 });
 
+// route all POST requests (for copying/uploading/creating files)
 router.post("/*", async (req, res, next) => {
   mode = req.files ? "upload" : req.body.mode;
 
   const { newName, type, content } = req.body;
 
-  const pathname = path.join(__dirname, "../files", req.path);
+  const useablePath = fileUtils.translatePath(req.path);
+  const pathname = path.join(__dirname, "../files", useablePath);
 
   if (mode === "copy") {
     if (!newName) return handleError(400)(req, res, next);
 
     // copy file to new path
-    const parentDirPath = path.join(__dirname, "../files", req.path, "..");
-    const splitPath = req.path.split("/");
+    const parentDirPath = path.join(__dirname, "../files", useablePath, "..");
+    const splitPath = useablePath.split("/");
     const type =
       splitPath[splitPath.length - 1].split(".").slice(1).join(".") || "";
     const newPath = path.join(
