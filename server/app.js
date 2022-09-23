@@ -3,7 +3,7 @@ const bodyParser = require("body-parser");
 const fileUpload = require("express-fileupload");
 const logger = require("morgan");
 const cookieParser = require("cookie-parser");
-const createError = require("http-errors");
+const handleError = require("./utilities/errorHandler");
 
 const userInfoRouter = require("./routes/userInfo");
 const driveRouter = require("./routes/drive");
@@ -42,17 +42,7 @@ app.use("/api/userinfo", userInfoRouter);
 // use "/api/drive", driveRouter
 app.use("/api/drive", driveRouter);
 
-// use error creator
-app.use((req, res, next) => {
-  next(createError(404));
-});
-
 // use error handler
-app.use((err, req, res, next) => {
-  res.locals.message = err.message;
-  res.locals.error = req.app.get("env") === "development" ? err : {};
-  res.status(err.status || 500);
-  res.send(`ERROR ${err.status}: ${err.message}`);
-});
+app.use(handleError(404));
 
 module.exports = app;
