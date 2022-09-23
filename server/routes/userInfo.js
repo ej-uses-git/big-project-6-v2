@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const fs = require("fs/promises");
+const path = require("path");
 
 const users = require("../userdata/userdata.json");
 const handleError = require("../utilities/errorHandler");
@@ -16,6 +17,7 @@ router.post("/register", async (req, res, next) => {
     //TODO: make the client send the password as already encrypted
     users[username] = encryptPassword(req.body[username]);
     await fs.writeFile("./userdata/userdata.json", JSON.stringify(users));
+    await fs.mkdir(path.join(__dirname, "../files", username));
     res.send(true);
   } catch (error) {
     const code = parseInt(error.message) || 500;

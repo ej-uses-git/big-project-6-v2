@@ -84,9 +84,11 @@ router.delete("/*", async (req, res, next) => {
     withFileTypes: true,
   });
   return res.send(
-    parentDirContents.map(({ name }) => ({
-      name: name.split(".")[0],
-      type: name.split(".").slice(1).join("."),
+    parentDirContents.map((ent) => ({
+      name: ent.name.split(".")[0],
+      type:
+        ent.name.split(".").slice(1).join(".") +
+        (ent.isDirectory() ? "dir" : ""),
     }))
   );
 });
@@ -117,9 +119,11 @@ router.put("/*", async (req, res, next) => {
       withFileTypes: true,
     });
     return res.send(
-      parentDirContents.map(({ name }) => ({
-        name: name.split(".")[0],
-        type: name.split(".").slice(1).join("."),
+      parentDirContents.map((ent) => ({
+        name: ent.name.split(".")[0],
+        type:
+          ent.name.split(".").slice(1).join(".") +
+          (ent.isDirectory() ? "dir" : ""),
       }))
     );
   } catch (error) {
@@ -177,9 +181,11 @@ router.post("/*", async (req, res, next) => {
         withFileTypes: true,
       });
       return res.send(
-        parentDirContents.map(({ name }) => ({
-          name: name.split(".")[0],
-          type: name.split(".").slice(1).join("."),
+        parentDirContents.map((ent) => ({
+          name: ent.name.split(".")[0],
+          type:
+            ent.name.split(".").slice(1).join(".") +
+            (ent.isDirectory() ? "dir" : ""),
         }))
       );
     } else {
@@ -214,13 +220,16 @@ router.post("/*", async (req, res, next) => {
       }
     }
 
+    // send contents of current directory
     const pathnameContents = await fs.readdir(pathname, {
       withFileTypes: true,
     });
     return res.send(
-      pathnameContents.map(({ name }) => ({
-        name: name.split(".")[0],
-        type: name.split(".").slice(1).join("."),
+      pathnameContents.map((ent) => ({
+        name: ent.name.split(".")[0],
+        type:
+          ent.name.split(".").slice(1).join(".") +
+          (ent.isDirectory() ? "dir" : ""),
       }))
     );
   } catch (error) {
