@@ -21,6 +21,7 @@ router.use(async (req, res, next) => {
 });
 
 // route all GET requests
+// GET /api/drive/path(?mode=info|download)
 router.get("/*", async (req, res, next) => {
   const useablePath = fileUtils.translatePath(req.path);
   const pathname = path.join(__dirname, "../files", useablePath);
@@ -65,6 +66,7 @@ router.get("/*", async (req, res, next) => {
 });
 
 // route DELETE request
+// DELETE /api/drive/path
 router.delete("/*", async (req, res, next) => {
   const useablePath = fileUtils.translatePath(req.path);
   // delete file
@@ -85,6 +87,8 @@ router.delete("/*", async (req, res, next) => {
 });
 
 // route PUT request (for renaming files/directories)
+// PUT /api/drive/path
+// body: { newName: valid file name }
 router.put("/*", async (req, res, next) => {
   // check if newName is set
   if (!req.body.newName) return handleError(400)(req, res, next);
@@ -115,8 +119,28 @@ router.put("/*", async (req, res, next) => {
 });
 
 // route all POST requests (for copying/uploading/creating files)
+/*
+  ?copy:
+  POST /api/drive/path <-- filename to be copied
+  body: { mode: "copy", newName: valid file name }
+
+  ?upload:
+  POST /api/drive/path <-- directory to upload to
+  body: files
+
+  ?create:
+  POST /api/drive/path <-- directory to create in
+  body: { 
+    mode: "create",
+    newName: valid file name,
+    type: file extension,
+    content: content (of the same type as [type])
+ }
+*/
 router.post("/*", async (req, res, next) => {
   mode = req.files ? "upload" : req.body.mode;
+
+  if (!mode) return handleError(400)(req, res, next);
 
   const { newName, type, content } = req.body;
 
