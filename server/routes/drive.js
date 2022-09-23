@@ -12,7 +12,6 @@ router.use(async (req, res, next) => {
     await fs.access(path.join(__dirname, "../files", req.path));
     next();
   } catch (error) {
-    console.log(error);
     handleError(404)(req, res, next);
   }
 });
@@ -23,9 +22,9 @@ router.get("/*", async (req, res, next) => {
   const splitPath = req.path.split("/");
   const name = splitPath[splitPath.length - 1];
 
-  const isInfo = req.body.isInfo;
+  const mode = req.body.mode;
   const stats = await fs.stat(pathname);
-  if (isInfo) {
+  if (mode === "info") {
     // send directory info
     const formattedInfo = await fileUtils.formatInfo(
       name,
@@ -38,14 +37,22 @@ router.get("/*", async (req, res, next) => {
 
   if (stats.isDirectory()) {
     // send directory contents
+    const contents = await fs.readdir(pathname, { withFileTypes: true });
+    return res.send(
+      contents.map(({ name }) => ({
+        name: name.split(".")[0],
+        type: name.split(".").slice(1).join("."),
+      }))
+    );
   }
 
-  if (/* "download" is flagged */ true) {
+  if (mode === "download") {
     // download file
+    return res.download(pathname);
   }
 
   // send file contents
-  res.send("did not get to the right place");
+  return res.sendFile(pathname);
 });
 
 module.exports = router;
