@@ -9,7 +9,7 @@ const fileUtils = require("../utilities/fileUtils");
 // middleware - validate that the file/dir at path exists
 router.use(async (req, res, next) => {
   try {
-    if (req.path === "/") throw new Error();
+    if (req.path === "/" && req.method === "DELETE") throw new Error();
     await fs.access(path.join(__dirname, "../files", req.path));
     next();
   } catch (error) {
@@ -57,9 +57,40 @@ router.get("/*", async (req, res, next) => {
 });
 
 router.delete("/*", async (req, res, next) => {
+  // delete file
   const pathname = path.join(__dirname, "../files", req.path);
-  const parentDirPath = path.join(__dirname, "../files", req.path, "..");
   await fs.rm(pathname, { recursive: true });
+
+  // send contents of parent directory
+  const parentDirPath = path.join(__dirname, "../files", req.path, "..");
+  const parentDirContents = await fs.readdir(parentDirPath, {
+    withFileTypes: true,
+  });
+  return res.send(
+    parentDirContents.map(({ name }) => ({
+      name: name.split(".")[0],
+      type: name.split(".").slice(1).join("."),
+    }))
+  );
+});
+
+router.put("/*", async (req, res, next) => {
+  // check if newName is set
+  if (!req.body.newName) return handleError(400)(req, res, next);
+
+  // rename file
+  const pathname = path.join(__dirname, "../files", req.path);
+  const splitPath = req.path.split("/");
+  const type =
+    splitPath[splitPath.length - 1].split(".").slice(1).join(".") || "";
+  const parentDirPath = path.join(__dirname, "../files", req.path, "..");
+  const newPath = path.join(
+    parentDirPath,
+    req.body.newName + (type ? "." : "") + type
+  );
+  await fs.rename(pathname, newPath);
+
+  // send contents of parent directory
   const parentDirContents = await fs.readdir(parentDirPath, {
     withFileTypes: true,
   });
