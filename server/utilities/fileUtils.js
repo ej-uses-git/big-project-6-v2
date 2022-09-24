@@ -38,9 +38,10 @@ async function _countContents(path) {
 
 const translatePath = (path) => path.replaceAll(/[+]|%20/g, " ");
 
-function findType(name, isDir){
-  if(isDir) return "dir";
-  return name.split(".").slice(1).join(".");
+function findType(name, isDir) {
+  if (isDir) return "dir";
+  const type = name.split(".").slice(1).join(".");
+  return type || "file";
 }
 
 module.exports = { formatInfo, translatePath, findType };
