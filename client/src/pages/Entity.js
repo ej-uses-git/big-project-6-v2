@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useResolvedPath } from "react-router-dom";
 import Folder from "./Folder";
+import File from "./File";
 import { getType } from "../utilities/fetchUtils";
 
 function Entity(props) {
@@ -37,7 +38,10 @@ function Entity(props) {
           dirsToContents={props.dirsToContents}
         />
       ) : (
-        "Not dir"
+        <File
+          pathsToType={props.pathsToType}
+          dirsToContents={props.dirsToContents}
+        />
       )}
     </div>
   );

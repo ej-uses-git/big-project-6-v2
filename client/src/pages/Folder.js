@@ -17,7 +17,7 @@ function Folder(props) {
       try {
         let contents = dirsToContents[pathname];
         if (contents) return setFolderContents(contents);
-        const [data, ok, status] = await getContents(pathname);
+        const [data, ok, status] = await getContents(pathname, "dir");
         if (!ok || !data instanceof Array) throw new Error(status);
         setFolderContents(data);
         setDirContents(pathname, data);

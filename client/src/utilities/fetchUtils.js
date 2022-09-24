@@ -14,7 +14,7 @@ async function getType(pathname) {
   }
 }
 
-async function getContents(pathname) {
+async function getContents(pathname, type) {
   console.log("Sending request!");
   try {
     const res = await fetch(`${SERVER_URL}/api/drive${pathname}`, {
@@ -22,7 +22,7 @@ async function getContents(pathname) {
       redirect: "follow",
     });
     let data;
-    if (res.headers.get("Content-type").includes("application/json")) {
+    if (type === "dir") {
       data = await res.json();
       return [data, res.ok, res.status];
     }
