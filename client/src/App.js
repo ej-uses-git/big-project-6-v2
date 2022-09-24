@@ -5,9 +5,6 @@ import "./App.css";
 import Entity from "./pages/Entity";
 
 function App() {
-  useEffect(() => {
-    console.log('mount');
-  }, []);
   const [pathsToType, setPathsToType] = useState({});
   const [dirsToContents, setDirsToContents] = useState({});
 
