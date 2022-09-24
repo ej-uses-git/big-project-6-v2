@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useResolvedPath } from "react-router-dom";
+import Folder from "./Folder";
 import { getType } from "../utilities/fetchUtils";
 
 function Entity(props) {
@@ -19,9 +20,8 @@ function Entity(props) {
       try {
         const [data, ok, status] = await getType(pathname);
         if (!ok) throw new Error(status);
-        entType = data;
-        setIsDir(entType === "dir");
-        setPathType(pathname, entType);
+        setIsDir(data === "dir");
+        setPathType(pathname, data);
       } catch (error) {
         console.error(error);
         navigate(`/error/${error.message.toLowerCase()}`);
@@ -29,7 +29,18 @@ function Entity(props) {
     })();
   }, [pathname]);
 
-  return <div className="entity">{isDir ? "Dir" : "Not dir"}</div>;
+  return (
+    <div className="entity">
+      {isDir ? (
+        <Folder
+          pathsToType={props.pathsToType}
+          dirsToContents={props.dirsToContents}
+        />
+      ) : (
+        "Not dir"
+      )}
+    </div>
+  );
 }
 
 export default Entity;

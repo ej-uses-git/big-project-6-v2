@@ -1,10 +1,14 @@
 import { useCallback, useState, useEffect } from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Drive from "./pages/Drive";
-import "./App.css";
 import Entity from "./pages/Entity";
+import Folder from "./pages/Folder";
+import "./App.css";
 
 function App() {
+  useEffect(() => {
+    console.log("App mount");
+  }, []);
   const [pathsToType, setPathsToType] = useState({});
   const [dirsToContents, setDirsToContents] = useState({});
 
@@ -31,7 +35,15 @@ function App() {
           </Route>
 
           <Route path="/:user" element={<Drive />}>
-            <Route index />
+            <Route
+              index
+              element={
+                <Folder
+                  pathsToType={[pathsToType, setPathType]}
+                  dirsToContents={[dirsToContents, setDirContents]}
+                />
+              }
+            />
             <Route
               path="*"
               element={
