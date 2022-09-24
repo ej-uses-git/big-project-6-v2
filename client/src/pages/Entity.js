@@ -24,7 +24,7 @@ function Entity(props) {
         setPathType(pathname, entType);
       } catch (error) {
         console.error(error);
-        navigate(`/error/${error.message}`);
+        navigate(`/error/${error.message.toLowerCase()}`);
       }
     })();
   }, [pathname]);
