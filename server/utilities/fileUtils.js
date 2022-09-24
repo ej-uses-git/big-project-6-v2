@@ -3,7 +3,6 @@ const fs = require("fs/promises");
 async function formatInfo(name, isDir, stats, path) {
   if (isDir) {
     const contentCount = await _countContents(path);
-    console.log(contentCount);
 
     return {
       Name: name,

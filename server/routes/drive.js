@@ -10,7 +10,6 @@ const fileUtils = require("../utilities/fileUtils");
 
 // middleware - validate that the file/dir at path exists
 router.use(async (req, res, next) => {
-  console.log("got here");
   const useablePath = fileUtils.translatePath(req.path);
   try {
     if (useablePath === "/" && req.method === "DELETE") throw new Error();
@@ -44,7 +43,8 @@ router.get("/*", async (req, res, next) => {
     }
 
     if (mode === "download") {
-      if (stats.isDirectory()) throw new Error(400);
+      if (stats.isDirectory())
+        throw new Error(400, { cause: "Cannot download directory." });
       // download file
       return res.download(pathname);
     }
@@ -74,23 +74,35 @@ router.get("/*", async (req, res, next) => {
 // DELETE /api/drive/path
 router.delete("/*", async (req, res, next) => {
   const useablePath = fileUtils.translatePath(req.path);
+  if (req.body.targets) {
+    const tempDir = fs.mkdtemp("temp");
+    // iterate once to check that all targets are valid, before we start to delete
+    for (let target of req.body.targets) {
+      const useableTarget = fileUtils.translatePath(target);
+      await fs.access(
+        path.join(__dirname, "../files", useablePath, useableTarget)
+      );
+    }
+
+    // delete every target
+    for (let target of req.body.targets) {
+      const useableTarget = fileUtils.translatePath(target);
+      await fs.rm(
+        path.join(__dirname, "../files", useablePath, useableTarget),
+        { recursive: true }
+      );
+    }
+    res.set("Method", "GET");
+    const splitPath = useablePath.split("/");
+    return res.redirect(`./${splitPath[splitPath.length - 1]}`);
+  }
   // delete file
   const pathname = path.join(__dirname, "../files", useablePath);
   await fs.rm(pathname, { recursive: true });
 
   // send contents of parent directory
-  const parentDirPath = path.join(__dirname, "../files", useablePath, "..");
-  const parentDirContents = await fs.readdir(parentDirPath, {
-    withFileTypes: true,
-  });
-  return res.send(
-    parentDirContents.map((ent) => ({
-      name: ent.name.split(".")[0],
-      type:
-        ent.name.split(".").slice(1).join(".") +
-        (ent.isDirectory() ? "dir" : ""),
-    }))
-  );
+  res.set("Method", "GET");
+  return res.redirect("./");
 });
 
 // route PUT request (for renaming files/directories)
@@ -99,7 +111,8 @@ router.delete("/*", async (req, res, next) => {
 router.put("/*", async (req, res, next) => {
   try {
     // check if newName is set
-    if (!req.body.newName) throw new Error(400);
+    if (!req.body.newName)
+      throw new Error(400, { cause: "No new name provided." });
 
     // rename file
     const useablePath = fileUtils.translatePath(req.path);
@@ -114,18 +127,8 @@ router.put("/*", async (req, res, next) => {
     );
     await fs.rename(pathname, newPath);
 
-    // send contents of parent directory
-    const parentDirContents = await fs.readdir(parentDirPath, {
-      withFileTypes: true,
-    });
-    return res.send(
-      parentDirContents.map((ent) => ({
-        name: ent.name.split(".")[0],
-        type:
-          ent.name.split(".").slice(1).join(".") +
-          (ent.isDirectory() ? "dir" : ""),
-      }))
-    );
+    res.set("Method", "GET");
+    return res.redirect("./");
   } catch (error) {
     const code = parseInt(error.message) || 500;
     return handleError(code, error)(req, res, next);
@@ -155,7 +158,7 @@ router.post("/*", async (req, res, next) => {
   try {
     mode = req.files ? "upload" : req.body.mode;
 
-    if (!mode) throw new Error(400);
+    if (!mode) throw new Error(400, { cause: "No mode provided." });
 
     const { newName, type, content } = req.body;
 
@@ -163,7 +166,7 @@ router.post("/*", async (req, res, next) => {
     const pathname = path.join(__dirname, "../files", useablePath);
 
     if (mode === "copy") {
-      if (!newName) throw new Error(400);
+      if (!newName) throw new Error(400, { cause: "No new name provided." });
 
       // copy file to new path
       const parentDirPath = path.join(__dirname, "../files", useablePath, "..");
@@ -176,23 +179,16 @@ router.post("/*", async (req, res, next) => {
       );
       await fs.cp(pathname, newPath, { recursive: true });
 
-      // send contents of parent directory
-      const parentDirContents = await fs.readdir(parentDirPath, {
-        withFileTypes: true,
-      });
-      return res.send(
-        parentDirContents.map((ent) => ({
-          name: ent.name.split(".")[0],
-          type:
-            ent.name.split(".").slice(1).join(".") +
-            (ent.isDirectory() ? "dir" : ""),
-        }))
-      );
+      res.set("Method", "GET");
+      return res.redirect("./");
     } else {
       //? if the requested path to create/upload to isn't a directory,
       //? we can't make a file inside it
       const stats = await fs.stat(pathname);
-      if (!stats.isDirectory()) throw new Error(400);
+      if (!stats.isDirectory())
+        throw new Error(400, {
+          cause: "Can only create or upload file inside a directory.",
+        });
     }
 
     if (mode === "upload") {
@@ -206,13 +202,15 @@ router.post("/*", async (req, res, next) => {
     }
 
     if (mode === "create") {
-      if (!newName) throw new Error(400);
+      if (!newName) throw new Error(400, { cause: "No new name provided." });
+
       if (type === "dir") {
         // make new directory with the given name
         const newPath = path.join(pathname, newName);
         await fs.mkdir(newPath);
       } else {
-        if (!content) throw new Error(400);
+        if (!content && content !== "")
+          throw new Error(400, { cause: "No content provided." });
 
         // make a new file with the given name and contents
         const newPath = path.join(pathname, newName + (type ? "." : "") + type);
@@ -220,18 +218,9 @@ router.post("/*", async (req, res, next) => {
       }
     }
 
-    // send contents of current directory
-    const pathnameContents = await fs.readdir(pathname, {
-      withFileTypes: true,
-    });
-    return res.send(
-      pathnameContents.map((ent) => ({
-        name: ent.name.split(".")[0],
-        type:
-          ent.name.split(".").slice(1).join(".") +
-          (ent.isDirectory() ? "dir" : ""),
-      }))
-    );
+    res.set("Method", "GET");
+    const splitPath = useablePath.split("/");
+    return res.redirect(`./${splitPath[splitPath.length - 1]}`);
   } catch (error) {
     const code = parseInt(error.message) || 500;
     return handleError(code, error)(req, res, next);
