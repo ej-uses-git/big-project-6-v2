@@ -31,6 +31,10 @@ router.get("/*", async (req, res, next) => {
 
     const mode = req.query.mode;
     const stats = await fs.stat(pathname);
+    if (mode === "type") {
+      return res.send(fileUtils.findType(name, stats.isDirectory()));
+    }
+
     if (mode === "info") {
       // send directory info
       const formattedInfo = await fileUtils.formatInfo(
