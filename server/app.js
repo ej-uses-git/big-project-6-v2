@@ -1,4 +1,5 @@
 const express = require("express");
+const cors = require("cors");
 const bodyParser = require("body-parser");
 const fileUpload = require("express-fileupload");
 const logger = require("morgan");
@@ -10,16 +11,8 @@ const driveRouter = require("./routes/drive");
 
 const app = express();
 
-// set response headers
-app.use((req, res, next) => {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header(
-    "Access-Control-Allow-Headers",
-    "Origin, X-Requested-With, Content-Type, Accept"
-  );
-  res.header("Access-Control-Allow-Methods", "*");
-  next();
-});
+// use cors policy
+app.use(cors());
 
 // use logger
 app.use(logger("dev"));

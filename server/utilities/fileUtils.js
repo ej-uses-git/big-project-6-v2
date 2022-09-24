@@ -44,4 +44,13 @@ function findType(name, isDir) {
   return type || "file";
 }
 
-module.exports = { formatInfo, translatePath, findType };
+async function dirContents(path) {
+  const contents = await fs.readdir(path, { withFileTypes: true });
+  return contents.map((ent) => ({
+    name: ent.name.split(".")[0],
+    type:
+      ent.name.split(".").slice(1).join(".") + (ent.isDirectory() ? "dir" : ""),
+  }));
+}
+
+module.exports = { formatInfo, translatePath, findType, dirContents };

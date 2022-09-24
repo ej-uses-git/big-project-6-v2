@@ -12,12 +12,24 @@ function App() {
   const [pathsToType, setPathsToType] = useState({});
   const [dirsToContents, setDirsToContents] = useState({});
 
-  const setPathType = useCallback((pathname, type) => {
-    setPathsToType((prev) => ({ ...prev, [pathname]: type }));
+  const setPathType = useCallback((pathname, type, oldPath) => {
+    setPathsToType((prev) => {
+      if (!oldPath) return { ...prev, [pathname]: type };
+      const copy = { ...prev };
+      delete copy[oldPath];
+      copy[pathname] = type;
+      return copy;
+    });
   });
 
-  const setDirContents = useCallback((pathname, contents) => {
-    setDirsToContents((prev) => ({ ...prev, [pathname]: contents }));
+  const setDirContents = useCallback((pathname, contents, oldPath) => {
+    setDirsToContents((prev) => {
+      if (!oldPath) return { ...prev, [pathname]: contents };
+      const copy = { ...prev };
+      delete copy[oldPath];
+      copy[pathname] = contents;
+      return copy;
+    });
   });
 
   return (

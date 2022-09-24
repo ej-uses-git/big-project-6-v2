@@ -55,15 +55,7 @@ router.get("/*", async (req, res, next) => {
 
     if (stats.isDirectory()) {
       // send directory contents
-      const contents = await fs.readdir(pathname, { withFileTypes: true });
-      return res.send(
-        contents.map((ent) => ({
-          name: ent.name.split(".")[0],
-          type:
-            ent.name.split(".").slice(1).join(".") +
-            (ent.isDirectory() ? "dir" : ""),
-        }))
-      );
+      return res.send(await fileUtils.dirContents(pathname));
     }
 
     // send file contents
@@ -105,8 +97,7 @@ router.delete("/*", async (req, res, next) => {
   await fs.rm(pathname, { recursive: true });
 
   // send contents of parent directory
-  res.set("Method", "GET");
-  return res.redirect("./");
+  return res.send(await fileUtils.dirContents(path.join(pathname, "../")));
 });
 
 // route PUT request (for editing)
@@ -151,8 +142,7 @@ router.put("/*", async (req, res, next) => {
     }
 
     // respond with parent directory contents
-    res.set("Method", "GET");
-    return res.redirect("./");
+    return res.send(await fileUtils.dirContents(path.join(pathname, "../")));
   } catch (error) {
     const code = parseInt(error.message) || 500;
     return handleError(code, error)(req, res, next);
@@ -204,8 +194,7 @@ router.post("/*", async (req, res, next) => {
       await fs.cp(pathname, newPath, { recursive: true });
 
       // respond with parent directory contents
-      res.set("Method", "GET");
-      return res.redirect("./");
+      return res.send(await fileUtils.dirContents(path.join(pathname, "../")));
     } else {
       //? if the requested path to create/upload to isn't a directory,
       //? we can't make a file inside it
@@ -244,9 +233,7 @@ router.post("/*", async (req, res, next) => {
     }
 
     // respond with path directory contents
-    res.set("Method", "GET");
-    const splitPath = useablePath.split("/");
-    return res.redirect(`./${splitPath[splitPath.length - 1]}`);
+    return res.send(await fileUtils.dirContents(pathname));
   } catch (error) {
     const code = parseInt(error.message) || 500;
     return handleError(code, error)(req, res, next);
