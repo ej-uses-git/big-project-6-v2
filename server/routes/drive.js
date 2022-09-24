@@ -105,9 +105,14 @@ router.delete("/*", async (req, res, next) => {
   return res.redirect("./");
 });
 
-// route PUT request (for renaming files/directories)
-// PUT /api/drive/path
-// body: { newName: valid file name }
+// route PUT request (for editing)
+/*
+  PUT /api/drive/path
+  body: { 
+   newName: valid file name, 
+   content (if not dir): some content for the file 
+  }
+ */
 router.put("/*", async (req, res, next) => {
   try {
     // check if newName is set
@@ -116,9 +121,17 @@ router.put("/*", async (req, res, next) => {
 
     const useablePath = fileUtils.translatePath(req.path);
     const pathname = path.join(__dirname, "../files", useablePath);
+    const stats = await fs.stat(pathname);
 
     // edit file content
-    if (req.body.content) await fs.writeFile(pathname, req.body.content);
+    if (req.body.content || req.body.content === "") {
+      if (stats.isDirectory())
+        throw new Error(400, {
+          cause: "Cannot write to directory.",
+        });
+
+      await fs.writeFile(pathname, req.body.content);
+    }
 
     // rename file
     if (req.body.newName) {
@@ -144,22 +157,22 @@ router.put("/*", async (req, res, next) => {
 
 // route all POST requests (for copying/uploading/creating files)
 /*
-  ?copy:
+  ->copy:
   POST /api/drive/path <-- filename to be copied
   body: { mode: "copy", newName: valid file name }
 
-  ?upload:
+  ->upload:
   POST /api/drive/path <-- directory to upload to
   body: files
 
-  ?create:
+  ->create:
   POST /api/drive/path <-- directory to create in
   body: { 
     mode: "create",
     newName: valid file name,
     type: file extension,
     content: content (of the same type as [type])
- }
+  }
 */
 router.post("/*", async (req, res, next) => {
   try {
