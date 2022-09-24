@@ -111,22 +111,29 @@ router.delete("/*", async (req, res, next) => {
 router.put("/*", async (req, res, next) => {
   try {
     // check if newName is set
-    if (!req.body.newName)
-      throw new Error(400, { cause: "No new name provided." });
+    if (!req.body.newName && !req.body.content)
+      throw new Error(400, { cause: "No new information provided." });
 
-    // rename file
     const useablePath = fileUtils.translatePath(req.path);
     const pathname = path.join(__dirname, "../files", useablePath);
-    const splitPath = useablePath.split("/");
-    const type =
-      splitPath[splitPath.length - 1].split(".").slice(1).join(".") || "";
-    const parentDirPath = path.join(__dirname, "../files", useablePath, "..");
-    const newPath = path.join(
-      parentDirPath,
-      req.body.newName + (type ? "." : "") + type
-    );
-    await fs.rename(pathname, newPath);
 
+    // edit file content
+    if (req.body.content) await fs.writeFile(pathname, req.body.content);
+
+    // rename file
+    if (req.body.newName) {
+      const splitPath = useablePath.split("/");
+      const type =
+        splitPath[splitPath.length - 1].split(".").slice(1).join(".") || "";
+      const parentDirPath = path.join(__dirname, "../files", useablePath, "..");
+      const newPath = path.join(
+        parentDirPath,
+        req.body.newName + (type ? "." : "") + type
+      );
+      await fs.rename(pathname, newPath);
+    }
+
+    // respond with parent directory contents
     res.set("Method", "GET");
     return res.redirect("./");
   } catch (error) {
@@ -156,6 +163,7 @@ router.put("/*", async (req, res, next) => {
 */
 router.post("/*", async (req, res, next) => {
   try {
+    //? no "mode" portion of the body can be provided if files are being uploaded
     mode = req.files ? "upload" : req.body.mode;
 
     if (!mode) throw new Error(400, { cause: "No mode provided." });
@@ -170,15 +178,15 @@ router.post("/*", async (req, res, next) => {
 
       // copy file to new path
       const parentDirPath = path.join(__dirname, "../files", useablePath, "..");
+      // include the original file's type
       const splitPath = useablePath.split("/");
-      const type =
-        splitPath[splitPath.length - 1].split(".").slice(1).join(".") || "";
-      const newPath = path.join(
-        parentDirPath,
-        req.body.newName + (type ? "." : "") + type
-      );
+      const fullName = splitPath[splitPath.length - 1];
+      let type = fullName.split(".").slice(1).join(".") || "";
+      type = (type ? "." : "") + type;
+      const newPath = path.join(parentDirPath, newName + type);
       await fs.cp(pathname, newPath, { recursive: true });
 
+      // respond with parent directory contents
       res.set("Method", "GET");
       return res.redirect("./");
     } else {
@@ -218,6 +226,7 @@ router.post("/*", async (req, res, next) => {
       }
     }
 
+    // respond with path directory contents
     res.set("Method", "GET");
     const splitPath = useablePath.split("/");
     return res.redirect(`./${splitPath[splitPath.length - 1]}`);
