@@ -16,6 +16,7 @@ function File(props) {
   const [fileName, setFileName] = useState(cleanName);
 
   const [, setPathType] = props.pathsToType;
+  const [, setPathInfo] = props.pathsToInfo;
   const [, setDirContents] = props.dirsToContents;
   const [filesToContents, setFileContents] = props.filesToContents;
 
@@ -45,6 +46,7 @@ function File(props) {
       const newPath =
         pathWithoutName + "/" + fileName + (fileType ? `.${fileType}` : "");
       setPathType(newPath, fileType || "file", pathname);
+      setPathInfo(null, null, pathname);
       setFileContents(newPath, content, pathname);
       setDirContents(pathWithoutName, data);
       window.history.replaceState({}, "", pathWithoutName);
@@ -63,6 +65,7 @@ function File(props) {
       });
       if (!ok) throw new Error(status + "\n " + data);
       setFileContents(pathname, content);
+      setPathInfo(null, null, pathname);
       originalContents.current = content;
     } catch (error) {
       console.error(error);

@@ -12,6 +12,7 @@ function App() {
   }, []);
 
   const [pathsToType, setPathsToType] = useState({});
+  const [pathsToInfo, setPathsToInfo] = useState({});
   const [dirsToContents, setDirsToContents] = useState({});
   const [filesToContents, setFilesToContents] = useState({});
 
@@ -35,6 +36,7 @@ function App() {
               element={
                 <Folder
                   pathsToType={[pathsToType, assignToState(setPathsToType)]}
+                  pathsToInfo={[pathsToInfo, assignToState(setPathsToInfo)]}
                   dirsToContents={[
                     dirsToContents,
                     assignToState(setDirsToContents),
@@ -47,6 +49,7 @@ function App() {
               element={
                 <Entity
                   pathsToType={[pathsToType, assignToState(setPathsToType)]}
+                  pathsToInfo={[pathsToInfo, assignToState(setPathsToInfo)]}
                   dirsToContents={[
                     dirsToContents,
                     assignToState(setDirsToContents),

@@ -1,7 +1,9 @@
 import { useEffect, useState, useCallback } from "react";
 import { useNavigate, useResolvedPath } from "react-router-dom";
 import ContextMenu from "../inner component/ContextMenu";
-import { getContents } from "../utilities/fetchUtils";
+import Display from "../inner component/Display";
+import { getContents, getInfo } from "../utilities/fetchUtils";
+import { getExtension } from "../utilities/reactUtils";
 
 function Folder(props) {
   const navigate = useNavigate();
@@ -13,16 +15,19 @@ function Folder(props) {
   const [anchorPoint, setAnchorPoint] = useState({ x: 0, y: 0 });
   const [hasContext, setHasContext] = useState();
   const [showMenu, setShowMenu] = useState(false);
+  const [display, setDisplay] = useState("");
+  const [showDisplay, setShowDisplay] = useState(false);
 
   const [pathsToType, setPathType] = props.pathsToType;
   const [dirsToContents, setDirContents] = props.dirsToContents;
+  const [pathsToInfo, setPathInfo] = props.pathsToInfo;
 
   const handleContextMenu = useCallback(
     (event) => {
       event.preventDefault();
       setSelected(event.target.title);
       setAnchorPoint({ x: event.pageX, y: event.pageY });
-      setHasContext(event.target.title);
+      setHasContext(event.target.parentNode.title);
       setShowMenu(true);
     },
     [setAnchorPoint, setShowMenu, setHasContext, setSelected]
@@ -37,35 +42,53 @@ function Folder(props) {
     [showMenu, setShowMenu, setSelected]
   );
 
-  const handleOptionSelect = useCallback(async (e) => {
-    const { title } = e.target;
-    console.log(title);
-    switch (title) {
-      case "info":
-        // get info
-        break;
-      case "show":
-        // enter entity
-        break;
-      case "rename":
-        // change td to be input
-        // rename on blur
-        break;
-      case "delete":
-        // show confirmation window
-        // delete on yes
-        break;
-      case "copy":
-        // show new name selection
-        // copy on selection
-        break;
-      case "download":
-        // get download
-        break;
-      default:
-        console.error(new Error("What the fuck?"));
-    }
-  }, []);
+  const handleOptionSelect = useCallback(
+    async (e) => {
+      try {
+        const { title } = e.target;
+        switch (title) {
+          case "info":
+            // get info
+            const entPath = pathname + hasContext;
+            if (pathsToInfo[entPath]) {
+              setDisplay(pathsToInfo[entPath]);
+              setShowDisplay(true);
+              return;
+            }
+            const [data, ok, status] = await getInfo(pathname + hasContext);
+            if (!ok) throw new Error(status + "\n " + data);
+            setDisplay(data);
+            setPathInfo(pathname + hasContext, data);
+            setShowDisplay(true);
+            break;
+          case "show":
+            // enter entity
+            break;
+          case "rename":
+            // change td to be input
+            // rename on blur
+            break;
+          case "delete":
+            // show confirmation window
+            // delete on yes
+            break;
+          case "copy":
+            // show new name selection
+            // copy on selection
+            break;
+          case "download":
+            // get download
+            break;
+          default:
+            console.error(new Error("What the fuck?"));
+        }
+      } catch (error) {
+        console.error(error.message);
+        navigate(`/error/${error.message}`);
+      }
+    },
+    [hasContext]
+  );
 
   useEffect(() => {
     document.addEventListener("click", handleClick);
@@ -107,6 +130,8 @@ function Folder(props) {
         />
       )}
 
+      {showDisplay && <Display display={display} />}
+
       <table>
         <thead>
           <tr>
@@ -118,19 +143,12 @@ function Folder(props) {
         <tbody>
           {folderContents.map(({ name, type }) => (
             <tr
-              key={name + type}
-              title={name + type}
-              onClick={() => {
-                if (selected === name + type)
-                  return navigate(
-                    `${pathname}/${
-                      name +
-                      (type && type !== "dir" && type !== "file"
-                        ? "." + type
-                        : "")
-                    }`
-                  );
-                setSelected(name + type);
+              key={name + getExtension(type)}
+              title={name + getExtension(type)}
+              onClick={(e) => {
+                if (selected === name + getExtension(type))
+                  return navigate(`${pathname}${name + getExtension(type)}`);
+                setSelected(name + getExtension(type));
               }}
               onContextMenu={handleContextMenu}
             >

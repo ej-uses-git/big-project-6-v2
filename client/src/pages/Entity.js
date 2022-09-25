@@ -36,11 +36,13 @@ function Entity(props) {
         (isDir ? (
           <Folder
             pathsToType={props.pathsToType}
+            pathsToInfo={props.pathsToInfo}
             dirsToContents={props.dirsToContents}
           />
         ) : (
           <File
             pathsToType={props.pathsToType}
+            pathsToInfo={props.pathsToInfo}
             dirsToContents={props.dirsToContents}
             filesToContents={props.filesToContents}
           />

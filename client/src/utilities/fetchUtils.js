@@ -36,7 +36,7 @@ async function getContents(pathname, type) {
 async function getInfo(pathname) {
   console.log("Sending GET (info) request!");
   try {
-    const res = await fetch(`${SERVER_URL}/api/drive/${pathname}?mode=info`, {
+    const res = await fetch(`${SERVER_URL}/api/drive${pathname}?mode=info`, {
       method: "GET",
       redirect: "follow",
     });
@@ -64,4 +64,4 @@ async function editEntity(pathname, body) {
   }
 }
 
-export { getType, getContents, editEntity };
+export { getType, getContents, editEntity, getInfo };

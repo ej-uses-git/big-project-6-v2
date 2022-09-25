@@ -4,10 +4,14 @@ function assignToState(setter) {
       if (!oldPath) return { ...prev, [pathname]: input };
       const copy = { ...prev };
       delete copy[oldPath];
+      if(!pathname) return copy;
       copy[pathname] = input;
       return copy;
     });
   };
 }
 
-export { assignToState };
+const getExtension = (type) =>
+  type && type !== "dir" && type !== "file" ? `.${type}` : "";
+
+export { assignToState, getExtension };
