@@ -20,7 +20,7 @@ function Entity(props) {
       if (entType) return setIsDir(entType === "dir");
       try {
         const [data, ok, status] = await getType(pathname);
-        if (!ok) throw new Error(status);
+        if (!ok) throw new Error(status + "\n" + data);
         setIsDir(data === "dir");
         setPathType(pathname, data);
       } catch (error) {

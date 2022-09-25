@@ -25,7 +25,7 @@ function File(props) {
   const fetchContent = useCallback(async () => {
     try {
       const [data, ok, status] = await getContents(pathname);
-      if (!ok) throw new Error(status);
+      if (!ok) throw new Error(status + "\n" + data);
       setContent(data);
       originalContents.current = data;
       setFileContents(pathname, data);
@@ -41,7 +41,7 @@ function File(props) {
       const [data, ok, status] = await editEntity(pathname, {
         newName: fileName,
       });
-      if (!ok) throw new Error(status);
+      if (!ok) throw new Error(status + "\n" + data);
       const newPath =
         pathWithoutName + "/" + fileName + (fileType ? `.${fileType}` : "");
       setPathType(newPath, fileType || "file", pathname);
@@ -61,7 +61,7 @@ function File(props) {
       const [data, ok, status] = await editEntity(pathname, {
         content,
       });
-      if (!ok) throw new Error(status);
+      if (!ok) throw new Error(status + "\n" + data);
       setFileContents(pathname, content);
       originalContents.current = content;
     } catch (error) {

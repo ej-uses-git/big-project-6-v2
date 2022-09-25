@@ -17,13 +17,16 @@ function Folder(props) {
   const [pathsToType, setPathType] = props.pathsToType;
   const [dirsToContents, setDirContents] = props.dirsToContents;
 
-  const handleContextMenu = useCallback((event) => {
-    event.preventDefault();
-    setSelected(event.target.title);
-    setAnchorPoint({ x: event.pageX, y: event.pageY });
-    setHasContext(event.target.title);
-    setShowMenu(true);
-  });
+  const handleContextMenu = useCallback(
+    (event) => {
+      event.preventDefault();
+      setSelected(event.target.title);
+      setAnchorPoint({ x: event.pageX, y: event.pageY });
+      setHasContext(event.target.title);
+      setShowMenu(true);
+    },
+    [setAnchorPoint, setShowMenu, setHasContext, setSelected]
+  );
 
   const handleClick = useCallback(
     (e) => {
@@ -31,7 +34,7 @@ function Folder(props) {
       if (e.target.tagName === "BODY" || e.target.tagName === "HTML")
         setSelected(null);
     },
-    [showMenu, selected]
+    [showMenu, setShowMenu, setSelected]
   );
 
   const handleOptionSelect = useCallback(async (e) => {
@@ -62,7 +65,7 @@ function Folder(props) {
       default:
         console.error(new Error("What the fuck?"));
     }
-  }, [])
+  }, []);
 
   useEffect(() => {
     document.addEventListener("click", handleClick);
@@ -77,7 +80,7 @@ function Folder(props) {
         const contents = dirsToContents[pathname];
         if (contents) return setFolderContents(contents);
         const [data, ok, status] = await getContents(pathname, "dir");
-        if (!ok || !data instanceof Array) throw new Error(status);
+        if (!ok || !(data instanceof Array)) throw new Error(status + "\n" + data);
         setFolderContents(data);
         setDirContents(pathname, data);
         data.forEach(({ name, type }) => {
@@ -92,7 +95,7 @@ function Folder(props) {
         navigate(`/error/${error.message.toLowerCase()}`);
       }
     })();
-  }, [pathname]);
+  }, [pathname, dirsToContents, navigate, setDirContents, setPathType]);
 
   return (
     <div className="folder">
