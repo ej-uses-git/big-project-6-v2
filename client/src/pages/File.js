@@ -33,7 +33,7 @@ function File(props) {
       console.error(error);
       navigate(`/error/${error.message.toLowerCase()}`);
     }
-  });
+  }, [pathname]);
 
   const handleNameBlur = useCallback(async () => {
     if (fileName === cleanName) return;
@@ -53,7 +53,7 @@ function File(props) {
       console.error(error);
       navigate(`/error/${error.message.toLowerCase()}`);
     }
-  });
+  }, [pathname, fileName]);
 
   const handleContentBlur = useCallback(async () => {
     if (content === originalContents.current) return;
@@ -63,11 +63,12 @@ function File(props) {
       });
       if (!ok) throw new Error(status);
       setFileContents(pathname, content);
+      originalContents.current = content;
     } catch (error) {
       console.error(error);
       navigate(`/error/${error.message.toLowerCase()}`);
     }
-  });
+  }, [pathname, content]);
 
   useEffect(() => {
     if (originalContents.current !== null)
