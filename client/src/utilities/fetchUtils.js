@@ -33,6 +33,20 @@ async function getContents(pathname, type) {
   }
 }
 
+async function getInfo(pathname) {
+  console.log("Sending GET (info) request!");
+  try {
+    const res = await fetch(`${SERVER_URL}/api/drive/${pathname}?mode=info`, {
+      method: "GET",
+      redirect: "follow",
+    });
+    const data = await res.json();
+    return [data, res.ok, res.status];
+  } catch (error) {
+    return [null, false, error.message];
+  }
+}
+
 async function editEntity(pathname, body) {
   console.log("Sending PUT request!");
   try {

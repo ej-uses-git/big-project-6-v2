@@ -17,6 +17,9 @@ function ContextMenu({ anchorPoint, onOptionSelect }) {
       <li onClick={onOptionSelect} title="copy" className="option">
         Copy
       </li>
+      <li onClick={onOptionSelect} title="download" className="option">
+        Download
+      </li>
     </ul>
   );
 }
