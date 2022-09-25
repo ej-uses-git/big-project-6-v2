@@ -12,7 +12,10 @@ function Entity(props) {
   const [pathsToType, setPathType] = props.pathsToType;
   const [dirsToContents, setDirContents] = props.dirsToContents;
 
-  const { pathname } = useResolvedPath();
+  const { pathname: tempPathname } = useResolvedPath();
+  const pathname = tempPathname.endsWith("/")
+    ? tempPathname
+    : `${tempPathname}/`;
 
   useEffect(() => {
     (async () => {
