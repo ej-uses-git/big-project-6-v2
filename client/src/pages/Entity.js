@@ -7,7 +7,7 @@ import { getType } from "../utilities/fetchUtils";
 function Entity(props) {
   const navigate = useNavigate();
 
-  const [isDir, setIsDir] = useState(false);
+  const [isDir, setIsDir] = useState(null);
 
   const [pathsToType, setPathType] = props.pathsToType;
   const [dirsToContents, setDirContents] = props.dirsToContents;
@@ -32,18 +32,19 @@ function Entity(props) {
 
   return (
     <div className="entity">
-      {isDir ? (
-        <Folder
-          pathsToType={props.pathsToType}
-          dirsToContents={props.dirsToContents}
-        />
-      ) : (
-        <File
-          pathsToType={props.pathsToType}
-          dirsToContents={props.dirsToContents}
-          filesToContents={props.filesToContents}
-        />
-      )}
+      {isDir !== null &&
+        (isDir ? (
+          <Folder
+            pathsToType={props.pathsToType}
+            dirsToContents={props.dirsToContents}
+          />
+        ) : (
+          <File
+            pathsToType={props.pathsToType}
+            dirsToContents={props.dirsToContents}
+            filesToContents={props.filesToContents}
+          />
+        ))}
     </div>
   );
 }

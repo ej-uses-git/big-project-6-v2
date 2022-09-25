@@ -15,7 +15,7 @@ function Folder(props) {
   useEffect(() => {
     (async () => {
       try {
-        let contents = dirsToContents[pathname];
+        const contents = dirsToContents[pathname];
         if (contents) return setFolderContents(contents);
         const [data, ok, status] = await getContents(pathname, "dir");
         if (!ok || !data instanceof Array) throw new Error(status);
@@ -47,7 +47,21 @@ function Folder(props) {
 
         <tbody>
           {folderContents.map(({ name, type }) => (
-            <tr key={name + type}>
+            <tr
+              key={name + type}
+              onClick={() => {
+                if (selected === name + type)
+                  return navigate(
+                    `${pathname}/${
+                      name +
+                      (type && type !== "dir" && type !== "file"
+                        ? "." + type
+                        : "")
+                    }`
+                  );
+                setSelected(name + type);
+              }}
+            >
               <td>{name}</td>
               <td>{type}</td>
             </tr>

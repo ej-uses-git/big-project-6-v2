@@ -22,7 +22,7 @@ function File(props) {
   const originalContents = useRef(filesToContents[pathname] ?? null);
   const isMount = useRef(true);
 
-  const fetchContent = async () => {
+  const fetchContent = useCallback(async () => {
     try {
       const [data, ok, status] = await getContents(pathname);
       if (!ok) throw new Error(status);
@@ -33,7 +33,7 @@ function File(props) {
       console.error(error);
       navigate(`/error/${error.message.toLowerCase()}`);
     }
-  };
+  });
 
   const handleNameBlur = useCallback(async () => {
     if (fileName === cleanName) return;
@@ -77,8 +77,7 @@ function File(props) {
   }, []);
 
   useEffect(() => {
-    if (isMount) return;
-    if (content === originalContents.current) return;
+    if (isMount || content === originalContents.current) return;
     fetchContent();
   }, [pathname]);
 
