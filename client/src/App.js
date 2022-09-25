@@ -9,6 +9,7 @@ function App() {
   useEffect(() => {
     console.log("App mount");
   }, []);
+
   const [pathsToType, setPathsToType] = useState({});
   const [dirsToContents, setDirsToContents] = useState({});
 

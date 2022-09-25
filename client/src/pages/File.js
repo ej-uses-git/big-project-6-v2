@@ -18,22 +18,25 @@ function File(props) {
   const [pathsToType, setPathType] = props.pathsToType;
   const [dirsToContents, setDirContents] = props.dirsToContents;
 
-  const handleNameBlur = async () => {
+  const handleNameBlur = useCallback(async () => {
     if (fileName === cleanName) return;
     try {
       const [data, ok, status] = await editEntity(pathname, {
         newName: fileName,
       });
       if (!ok) throw new Error(status);
-      const newPath = pathWithoutName + fileName + `.${fileType}`;
+      const newPath =
+        pathWithoutName + fileName + (fileType ? `.${fileType}` : "");
       setPathType(newPath, fileType, pathname);
       setDirContents(pathWithoutName, data);
-      navigate(fileName + `.${fileType}`);
+      window.history.replaceState({}, "", pathWithoutName);
+      console.log(fileType);
+      navigate(fileName + (fileType ? `.${fileType}` : ""));
     } catch (error) {
       console.error(error);
       navigate(`/error/${error.message.toLowerCase()}`);
     }
-  };
+  });
 
   useEffect(() => {
     (async () => {
