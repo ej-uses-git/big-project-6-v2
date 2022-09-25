@@ -8,6 +8,7 @@ function Folder(props) {
   const { pathname } = useResolvedPath();
 
   const [folderContents, setFolderContents] = useState([]);
+  const [selected, setSelected] = useState();
 
   const [pathsToType, setPathType] = props.pathsToType;
   const [dirsToContents, setDirContents] = props.dirsToContents;
