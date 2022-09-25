@@ -41,6 +41,7 @@ function Entity(props) {
         <File
           pathsToType={props.pathsToType}
           dirsToContents={props.dirsToContents}
+          filesToContents={props.filesToContents}
         />
       )}
     </div>

@@ -4,6 +4,7 @@ import Drive from "./pages/Drive";
 import Entity from "./pages/Entity";
 import Folder from "./pages/Folder";
 import "./App.css";
+import { assignToState } from "./utilities/reactUtils";
 
 function App() {
   useEffect(() => {
@@ -12,26 +13,7 @@ function App() {
 
   const [pathsToType, setPathsToType] = useState({});
   const [dirsToContents, setDirsToContents] = useState({});
-
-  const setPathType = useCallback((pathname, type, oldPath) => {
-    setPathsToType((prev) => {
-      if (!oldPath) return { ...prev, [pathname]: type };
-      const copy = { ...prev };
-      delete copy[oldPath];
-      copy[pathname] = type;
-      return copy;
-    });
-  });
-
-  const setDirContents = useCallback((pathname, contents, oldPath) => {
-    setDirsToContents((prev) => {
-      if (!oldPath) return { ...prev, [pathname]: contents };
-      const copy = { ...prev };
-      delete copy[oldPath];
-      copy[pathname] = contents;
-      return copy;
-    });
-  });
+  const [filesToContents, setFilesToContents] = useState({});
 
   return (
     <div className="App">
@@ -52,8 +34,11 @@ function App() {
               index
               element={
                 <Folder
-                  pathsToType={[pathsToType, setPathType]}
-                  dirsToContents={[dirsToContents, setDirContents]}
+                  pathsToType={[pathsToType, assignToState(setPathsToType)]}
+                  dirsToContents={[
+                    dirsToContents,
+                    assignToState(setDirsToContents),
+                  ]}
                 />
               }
             />
@@ -61,8 +46,15 @@ function App() {
               path="*"
               element={
                 <Entity
-                  pathsToType={[pathsToType, setPathType]}
-                  dirsToContents={[dirsToContents, setDirContents]}
+                  pathsToType={[pathsToType, assignToState(setPathsToType)]}
+                  dirsToContents={[
+                    dirsToContents,
+                    assignToState(setDirsToContents),
+                  ]}
+                  filesToContents={[
+                    filesToContents,
+                    assignToState(setFilesToContents),
+                  ]}
                 />
               }
             />

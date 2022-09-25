@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useNavigate, useResolvedPath } from "react-router-dom";
 import { getContents, editEntity } from "../utilities/fetchUtils";
 
@@ -15,8 +15,25 @@ function File(props) {
   const [content, setContent] = useState("");
   const [fileName, setFileName] = useState(cleanName);
 
-  const [pathsToType, setPathType] = props.pathsToType;
-  const [dirsToContents, setDirContents] = props.dirsToContents;
+  const [, setPathType] = props.pathsToType;
+  const [, setDirContents] = props.dirsToContents;
+  const [filesToContents, setFileContents] = props.filesToContents;
+
+  const originalContents = useRef(filesToContents[pathname] ?? null);
+  const isMount = useRef(true);
+
+  const fetchContent = async () => {
+    try {
+      const [data, ok, status] = await getContents(pathname);
+      if (!ok) throw new Error(status);
+      setContent(data);
+      originalContents.current = data;
+      setFileContents(pathname, data);
+    } catch (error) {
+      console.error(error);
+      navigate(`/error/${error.message.toLowerCase()}`);
+    }
+  };
 
   const handleNameBlur = useCallback(async () => {
     if (fileName === cleanName) return;
@@ -26,11 +43,11 @@ function File(props) {
       });
       if (!ok) throw new Error(status);
       const newPath =
-        pathWithoutName + fileName + (fileType ? `.${fileType}` : "");
-      setPathType(newPath, fileType, pathname);
+        pathWithoutName + "/" + fileName + (fileType ? `.${fileType}` : "");
+      setPathType(newPath, fileType || "file", pathname);
+      setFileContents(newPath, content, pathname);
       setDirContents(pathWithoutName, data);
       window.history.replaceState({}, "", pathWithoutName);
-      console.log(fileType);
       navigate(fileName + (fileType ? `.${fileType}` : ""));
     } catch (error) {
       console.error(error);
@@ -38,18 +55,33 @@ function File(props) {
     }
   });
 
+  const handleContentBlur = useCallback(async () => {
+    if (content === originalContents.current) return;
+    try {
+      const [data, ok, status] = await editEntity(pathname, {
+        content,
+      });
+      if (!ok) throw new Error(status);
+      setFileContents(pathname, content);
+    } catch (error) {
+      console.error(error);
+      navigate(`/error/${error.message.toLowerCase()}`);
+    }
+  });
+
   useEffect(() => {
-    (async () => {
-      try {
-        const [data, ok, status] = await getContents(pathname);
-        if (!ok) throw new Error(status);
-        setContent(data);
-      } catch (error) {
-        console.error(error);
-        navigate(`/error/${error.message.toLowerCase()}`);
-      }
-    })();
+    if (originalContents.current !== null)
+      return setContent(originalContents.current);
+    isMount.current = false;
+    fetchContent();
+  }, []);
+
+  useEffect(() => {
+    if (isMount) return;
+    if (content === originalContents.current) return;
+    fetchContent();
   }, [pathname]);
+
   return (
     <div className="file">
       <input
@@ -57,6 +89,9 @@ function File(props) {
         value={fileName}
         onChange={(e) => setFileName(e.target.value)}
         onBlur={handleNameBlur}
+        onKeyUp={(e) => {
+          if (e.key === "Enter") handleNameBlur();
+        }}
       />
       <p>{fileType}</p>
       <textarea
@@ -64,6 +99,7 @@ function File(props) {
         id="file-content"
         value={content}
         onChange={(e) => setContent(e.target.value)}
+        onBlur={handleContentBlur}
       ></textarea>
     </div>
   );
