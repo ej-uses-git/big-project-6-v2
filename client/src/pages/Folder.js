@@ -34,6 +34,36 @@ function Folder(props) {
     [showMenu, selected]
   );
 
+  const handleOptionSelect = useCallback(async (e) => {
+    const { title } = e.target;
+    console.log(title);
+    switch (title) {
+      case "info":
+        // get info
+        break;
+      case "show":
+        // enter entity
+        break;
+      case "rename":
+        // change td to be input
+        // rename on blur
+        break;
+      case "delete":
+        // show confirmation window
+        // delete on yes
+        break;
+      case "copy":
+        // show new name selection
+        // copy on selection
+        break;
+      case "download":
+        // get download
+        break;
+      default:
+        console.error(new Error("What the fuck?"));
+    }
+  }, [])
+
   useEffect(() => {
     document.addEventListener("click", handleClick);
     return () => {
@@ -69,7 +99,7 @@ function Folder(props) {
       {showMenu && (
         <ContextMenu
           anchorPoint={anchorPoint}
-          onOptionSelect={() => {}}
+          onOptionSelect={handleOptionSelect}
         />
       )}
 

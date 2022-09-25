@@ -36,8 +36,8 @@ function File(props) {
   }, [pathname]);
 
   const handleNameBlur = useCallback(async () => {
-    if (fileName === cleanName) return;
     try {
+      if (fileName === cleanName) return;
       const [data, ok, status] = await editEntity(pathname, {
         newName: fileName,
       });
@@ -56,8 +56,8 @@ function File(props) {
   }, [pathname, fileName]);
 
   const handleContentBlur = useCallback(async () => {
-    if (content === originalContents.current) return;
     try {
+      if (content === originalContents.current) return;
       const [data, ok, status] = await editEntity(pathname, {
         content,
       });
