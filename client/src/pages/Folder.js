@@ -80,7 +80,8 @@ function Folder(props) {
         const contents = dirsToContents[pathname];
         if (contents) return setFolderContents(contents);
         const [data, ok, status] = await getContents(pathname, "dir");
-        if (!ok || !(data instanceof Array)) throw new Error(status + "\n" + data);
+        if (!ok || !(data instanceof Array))
+          throw new Error(status + "\n " + data);
         setFolderContents(data);
         setDirContents(pathname, data);
         data.forEach(({ name, type }) => {
