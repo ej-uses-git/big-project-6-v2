@@ -111,7 +111,7 @@ router.delete("/*", async (req, res, next) => {
 router.put("/*", async (req, res, next) => {
   try {
     // check if newName is set
-    if (!req.body.newName && !req.body.content)
+    if (!req.body.newName && !req.body.content && req.body.content !== "")
       throw new Error(400, { cause: "No new information provided." });
 
     const useablePath = fileUtils.translatePath(req.path);
