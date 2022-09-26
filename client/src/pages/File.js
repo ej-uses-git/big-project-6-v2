@@ -55,7 +55,6 @@ function File(props) {
       setFileContents(newPath, content, pathname);
       setDirContents(pathWithoutName, data);
       history.replace(pathWithoutName + fileName + (fileType ? `.${fileType}` : ""));
-      // navigate(pathWithoutName + fileName + (fileType ? `.${fileType}` : ""));
     } catch (error) {
       console.error(error);
       navigate(`/error/${error.message.toLowerCase()}`);

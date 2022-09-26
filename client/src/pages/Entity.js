@@ -8,7 +8,6 @@ function Entity(props) {
   const navigate = useNavigate();
 
   const [isDir, setIsDir] = useState(null);
-  const [renameOccured, setRenameOccured] = useState(false);
 
   const [pathsToType, setPathType] = props.pathsToType;
 
@@ -20,6 +19,9 @@ function Entity(props) {
   useEffect(() => {
     if (pathsToType[pathname]) return setIsDir(pathsToType[pathname] === "dir");
     setIsDir(null);
+    //? we don't want this to run whenever pathsToType changes, 
+    //? as it will change upon a rename
+    // eslint-disable-next-line
   }, [pathname, setIsDir]);
 
   useEffect(() => {
@@ -50,7 +52,6 @@ function Entity(props) {
           />
         ) : (
           <File
-            setRenameOccured={setRenameOccured}
             pathsToType={props.pathsToType}
             pathsToInfo={props.pathsToInfo}
             dirsToContents={props.dirsToContents}
