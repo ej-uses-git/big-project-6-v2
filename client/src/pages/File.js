@@ -1,6 +1,9 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Link, useNavigate, useResolvedPath } from "react-router-dom";
+import { createBrowserHistory } from "history";
 import { getContents, editEntity } from "../utilities/fetchUtils";
+
+const history = createBrowserHistory();
 
 function File(props) {
   const navigate = useNavigate();
@@ -51,12 +54,8 @@ function File(props) {
       setPathInfo(null, null, pathname);
       setFileContents(newPath, content, pathname);
       setDirContents(pathWithoutName, data);
-      window.history.replaceState(
-        {},
-        "",
-        pathWithoutName + fileName + (fileType ? `.${fileType}` : "")
-      );
-      navigate(pathWithoutName + fileName + (fileType ? `.${fileType}` : ""));
+      history.replace(pathWithoutName + fileName + (fileType ? `.${fileType}` : ""));
+      // navigate(pathWithoutName + fileName + (fileType ? `.${fileType}` : ""));
     } catch (error) {
       console.error(error);
       navigate(`/error/${error.message.toLowerCase()}`);
