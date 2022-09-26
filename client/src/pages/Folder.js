@@ -67,7 +67,7 @@ function Folder(props) {
             break;
           case "show":
             // enter entity
-            break;
+            return navigate(`${pathname + hasContext}`);
           case "rename":
             // change td to be input
             // rename on blur
