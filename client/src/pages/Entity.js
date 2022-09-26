@@ -18,19 +18,17 @@ function Entity(props) {
     : `${tempPathname}/`;
 
   useEffect(() => {
-    console.log(pathsToType, pathname);
-    if (pathsToType[pathname]) return;
+    if (pathsToType[pathname]) return setIsDir(pathsToType[pathname] === "dir");
     setIsDir(null);
   }, [pathname, setIsDir]);
 
   useEffect(() => {
     if (isDir !== null) return;
     (async () => {
-      const entType = pathsToType[pathname];
-      if (entType) return setIsDir(entType === "dir");
       try {
+        const entType = pathsToType[pathname];
+        if (entType || entType === "") return setIsDir(entType === "dir");
         const [data, ok, status] = await getType(pathname);
-        console.log("Sent GET (Type) from Entity [31]");
         if (!ok) throw new Error(status + "\n " + data);
         setIsDir(data === "dir");
         setPathType(pathname, data);

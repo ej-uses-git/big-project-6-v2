@@ -108,15 +108,14 @@ function Folder(props) {
         const contents = dirsToContents[pathname];
         if (contents) return setFolderContents(contents);
         const [data, ok, status] = await getContents(pathname, "dir");
-        console.log("Sent GET (Content) from Folder [117]");
         if (!ok || !(data instanceof Array))
           throw new Error(status + "\n " + data);
         setFolderContents(data);
         setDirContents(pathname, data);
         data.forEach(({ name, type }) => {
           let entPath;
-          if (type === "dir" || !type) entPath = pathname + `/${name}`;
-          else entPath = pathname + `/${name}.${type}`;
+          if (type === "dir" || !type) entPath = pathname + `/${name}/`;
+          else entPath = pathname + `/${name}.${type}/`;
           setPathType(entPath, type);
         });
       } catch (error) {

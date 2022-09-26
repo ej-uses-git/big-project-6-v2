@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { useNavigate, useResolvedPath } from "react-router-dom";
+import { Link, useNavigate, useResolvedPath } from "react-router-dom";
 import { getContents, editEntity } from "../utilities/fetchUtils";
 
 function File(props) {
@@ -24,7 +24,6 @@ function File(props) {
   const [filesToContents, setFileContents] = props.filesToContents;
 
   const originalContents = useRef(filesToContents[pathname] ?? null);
-  // const isMount = useRef(true);
 
   const fetchContent = useCallback(async () => {
     try {
@@ -47,8 +46,8 @@ function File(props) {
       });
       if (!ok) throw new Error(status + " " + data);
       const newPath =
-        pathWithoutName +  fileName + (fileType ? `.${fileType}` : "");
-      setPathType(newPath, fileType || "file", pathname);
+        pathWithoutName + fileName + (fileType ? `.${fileType}/` : "/");
+      setPathType(newPath, fileType, pathname + "/");
       setPathInfo(null, null, pathname);
       setFileContents(newPath, content, pathname);
       setDirContents(pathWithoutName, data);
@@ -95,14 +94,8 @@ function File(props) {
   useEffect(() => {
     if (originalContents.current !== null)
       return setContent(originalContents.current);
-    // isMount.current = false;
     fetchContent();
   }, [fetchContent]);
-
-  // useEffect(() => {
-  //   if (isMount || content === originalContents.current) return;
-  //   fetchContent();
-  // }, [pathname]);
 
   return (
     <div className="file">
@@ -123,6 +116,8 @@ function File(props) {
         onChange={(e) => setContent(e.target.value)}
         onBlur={handleContentBlur}
       ></textarea>
+
+      <Link to={pathWithoutName}>Back</Link>
     </div>
   );
 }

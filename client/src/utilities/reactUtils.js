@@ -3,7 +3,6 @@ function assignToState(setter) {
     setter((prev) => {
       if (!oldPath) return { ...prev, [pathname]: input };
       const copy = { ...prev };
-      console.log("oldpath: ", oldPath);
       delete copy[oldPath];
       if (!pathname) return copy;
       copy[pathname] = input;
@@ -13,6 +12,6 @@ function assignToState(setter) {
 }
 
 const getExtension = (type) =>
-  type && type !== "dir" && type !== "file" ? `.${type}` : "";
+  type && type !== "dir" ? `.${type}` : "";
 
 export { assignToState, getExtension };
