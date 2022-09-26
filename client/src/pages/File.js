@@ -24,7 +24,7 @@ function File(props) {
   const [filesToContents, setFileContents] = props.filesToContents;
 
   const originalContents = useRef(filesToContents[pathname] ?? null);
-  const isMount = useRef(true);
+  // const isMount = useRef(true);
 
   const fetchContent = useCallback(async () => {
     try {
@@ -37,7 +37,7 @@ function File(props) {
       console.error(error);
       navigate(`/error/${error.message.toLowerCase()}`);
     }
-  }, [pathname]);
+  }, [pathname, navigate, setFileContents]);
 
   const handleNameBlur = useCallback(async () => {
     try {
@@ -45,9 +45,9 @@ function File(props) {
       const [data, ok, status] = await editEntity(pathname, {
         newName: fileName,
       });
-      if (!ok) throw new Error(status + "\n " + data);
+      if (!ok) throw new Error(status + " " + data);
       const newPath =
-        pathWithoutName + "/" + fileName + (fileType ? `.${fileType}` : "");
+        pathWithoutName +  fileName + (fileType ? `.${fileType}` : "");
       setPathType(newPath, fileType || "file", pathname);
       setPathInfo(null, null, pathname);
       setFileContents(newPath, content, pathname);
@@ -57,11 +57,24 @@ function File(props) {
         "",
         pathWithoutName + fileName + (fileType ? `.${fileType}` : "")
       );
+      navigate(pathWithoutName + fileName + (fileType ? `.${fileType}` : ""));
     } catch (error) {
       console.error(error);
       navigate(`/error/${error.message.toLowerCase()}`);
     }
-  }, [pathname, fileName]);
+  }, [
+    pathname,
+    cleanName,
+    fileType,
+    pathWithoutName,
+    fileName,
+    content,
+    navigate,
+    setDirContents,
+    setFileContents,
+    setPathInfo,
+    setPathType,
+  ]);
 
   const handleContentBlur = useCallback(async () => {
     try {
@@ -69,7 +82,7 @@ function File(props) {
       const [data, ok, status] = await editEntity(pathname, {
         content,
       });
-      if (!ok) throw new Error(status + "\n " + data);
+      if (!ok) throw new Error(status + " " + data);
       setFileContents(pathname, content);
       setPathInfo(null, null, pathname);
       originalContents.current = content;
@@ -77,19 +90,19 @@ function File(props) {
       console.error(error);
       navigate(`/error/${error.message.toLowerCase()}`);
     }
-  }, [pathname, content]);
+  }, [pathname, content, navigate, setFileContents, setPathInfo]);
 
   useEffect(() => {
     if (originalContents.current !== null)
       return setContent(originalContents.current);
-    isMount.current = false;
+    // isMount.current = false;
     fetchContent();
-  }, []);
+  }, [fetchContent]);
 
-  useEffect(() => {
-    if (isMount || content === originalContents.current) return;
-    fetchContent();
-  }, [pathname]);
+  // useEffect(() => {
+  //   if (isMount || content === originalContents.current) return;
+  //   fetchContent();
+  // }, [pathname]);
 
   return (
     <div className="file">

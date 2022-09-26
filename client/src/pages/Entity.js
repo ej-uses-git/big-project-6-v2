@@ -8,6 +8,7 @@ function Entity(props) {
   const navigate = useNavigate();
 
   const [isDir, setIsDir] = useState(null);
+  const [renameOccured, setRenameOccured] = useState(false);
 
   const [pathsToType, setPathType] = props.pathsToType;
 
@@ -17,6 +18,8 @@ function Entity(props) {
     : `${tempPathname}/`;
 
   useEffect(() => {
+    console.log(pathsToType, pathname);
+    if (pathsToType[pathname]) return;
     setIsDir(null);
   }, [pathname, setIsDir]);
 
@@ -43,13 +46,13 @@ function Entity(props) {
       {isDir !== null &&
         (isDir ? (
           <Folder
-            isDir={isDir}
             pathsToType={props.pathsToType}
             pathsToInfo={props.pathsToInfo}
             dirsToContents={props.dirsToContents}
           />
         ) : (
           <File
+            setRenameOccured={setRenameOccured}
             pathsToType={props.pathsToType}
             pathsToInfo={props.pathsToInfo}
             dirsToContents={props.dirsToContents}

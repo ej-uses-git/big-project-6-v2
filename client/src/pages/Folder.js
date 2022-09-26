@@ -2,7 +2,7 @@ import { useEffect, useState, useCallback, useRef } from "react";
 import { useNavigate, useResolvedPath } from "react-router-dom";
 import ContextMenu from "../inner component/ContextMenu";
 import Display from "../inner component/Display";
-import { getContents, getInfo, getType } from "../utilities/fetchUtils";
+import { getContents, getInfo } from "../utilities/fetchUtils";
 import { getExtension } from "../utilities/reactUtils";
 
 function Folder(props) {
@@ -91,7 +91,7 @@ function Folder(props) {
         navigate(`/error/${error.message}`);
       }
     },
-    [hasContext]
+    [hasContext, navigate, pathname, pathsToInfo, setPathInfo]
   );
 
   useEffect(() => {
@@ -115,8 +115,7 @@ function Folder(props) {
         setDirContents(pathname, data);
         data.forEach(({ name, type }) => {
           let entPath;
-          if (type === "dir" || type === "file")
-            entPath = pathname + `/${name}`;
+          if (type === "dir" || !type) entPath = pathname + `/${name}`;
           else entPath = pathname + `/${name}.${type}`;
           setPathType(entPath, type);
         });
