@@ -19,7 +19,7 @@ function Folder(props) {
   const [anchorPoint, setAnchorPoint] = useState({ x: 0, y: 0 });
   const [hasContext, setHasContext] = useState();
   const [showMenu, setShowMenu] = useState(false);
-  const [display, setDisplay] = useState("");
+  const [display, setDisplay] = useState({ mode: "", content: "" });
   const [showDisplay, setShowDisplay] = useState(false);
 
   const [, setPathType] = props.pathsToType;
@@ -40,8 +40,10 @@ function Folder(props) {
   const handleClick = useCallback(
     (e) => {
       if (showMenu) setShowMenu(false);
-      if (e.target.tagName === "BODY" || e.target.tagName === "HTML")
+      if (e.target.tagName === "BODY" || e.target.tagName === "HTML") {
         setSelected(null);
+        setShowDisplay(false);
+      }
     },
     [showMenu, setShowMenu, setSelected]
   );
@@ -55,13 +57,13 @@ function Folder(props) {
             // get info
             const entPath = pathname + hasContext;
             if (pathsToInfo[entPath]) {
-              setDisplay(pathsToInfo[entPath]);
+              setDisplay({ mode: "info", content: pathsToInfo[entPath] });
               setShowDisplay(true);
               return;
             }
             const [data, ok, status] = await getInfo(pathname + hasContext);
             if (!ok) throw new Error(status + "\n " + data);
-            setDisplay(data);
+            setDisplay({ mode: "info", content: data });
             setPathInfo(pathname + hasContext, data);
             setShowDisplay(true);
             break;
@@ -69,8 +71,8 @@ function Folder(props) {
             // enter entity
             return navigate(`${pathname + hasContext}`);
           case "rename":
-            // change td to be input
-            // rename on blur
+            setDisplay({ mode: "rename", content: hasContext });
+            setShowDisplay(true);
             break;
           case "delete":
             // show confirmation window
@@ -125,6 +127,15 @@ function Folder(props) {
     })();
   }, [pathname, dirsToContents, navigate, setDirContents, setPathType]);
 
+  useEffect(() => {
+    if (
+      dirsToContents[pathname] === folderContents ||
+      !dirsToContents[pathname]
+    )
+      return;
+    setFolderContents(dirsToContents[pathname]);
+  }, [dirsToContents, pathname]);
+
   return (
     <div className="folder">
       {showMenu && (
@@ -134,7 +145,18 @@ function Folder(props) {
         />
       )}
 
-      {showDisplay && <Display display={display} />}
+      {showDisplay && (
+        <Display
+          display={display}
+          disappear={handleClick}
+          pathsToType={props.pathsToType}
+          pathsToInfo={props.pathsToInfo}
+          dirsToContents={props.dirsToContents}
+          entType={folderContents.find(
+            (ent) => ent.name + getExtension(ent.type) === hasContext
+          )}
+        />
+      )}
 
       <table>
         <thead>
