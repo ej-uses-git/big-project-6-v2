@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useRef } from "react";
 import { useNavigate, useResolvedPath } from "react-router-dom";
 import ContextMenu from "../inner component/ContextMenu";
 import Display from "../inner component/Display";
@@ -12,7 +12,8 @@ function Folder(props) {
   const pathname = tempPathname.endsWith("/")
     ? tempPathname
     : `${tempPathname}/`;
-    
+  const originalPathname = useRef(pathname);
+
   const [folderContents, setFolderContents] = useState([]);
   const [selected, setSelected] = useState();
   const [anchorPoint, setAnchorPoint] = useState({ x: 0, y: 0 });
@@ -21,7 +22,7 @@ function Folder(props) {
   const [display, setDisplay] = useState("");
   const [showDisplay, setShowDisplay] = useState(false);
 
-  const [pathsToType, setPathType] = props.pathsToType;
+  const [, setPathType] = props.pathsToType;
   const [dirsToContents, setDirContents] = props.dirsToContents;
   const [pathsToInfo, setPathInfo] = props.pathsToInfo;
 
@@ -103,16 +104,11 @@ function Folder(props) {
   useEffect(() => {
     (async () => {
       try {
-        const entType = pathsToType[pathname];
-        if (entType && entType !== "dir") return;
-        if (!entType) {
-          const [data, ok, status] = await getType(pathname);
-          if (!ok) throw new Error(status + "\n " + data);
-          if (data !== "dir") return;
-        }
+        if (pathname !== originalPathname.current) return;
         const contents = dirsToContents[pathname];
         if (contents) return setFolderContents(contents);
         const [data, ok, status] = await getContents(pathname, "dir");
+        console.log("Sent GET (Content) from Folder [117]");
         if (!ok || !(data instanceof Array))
           throw new Error(status + "\n " + data);
         setFolderContents(data);

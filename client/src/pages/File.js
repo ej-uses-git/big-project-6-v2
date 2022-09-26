@@ -7,7 +7,10 @@ function File(props) {
 
   const { pathname } = useResolvedPath();
   const splitPath = pathname.split("/");
-  const pathWithoutName = splitPath.slice(0, -1).join("/");
+  let pathWithoutName = splitPath.slice(0, -1).join("/");
+  pathWithoutName = pathWithoutName.endsWith("/")
+    ? pathWithoutName
+    : `${pathWithoutName}/`;
   const fullName = splitPath[splitPath.length - 1];
   const cleanName = fullName.split(".")[0];
   const fileType = fullName.split(".").slice(1).join(".");
@@ -49,8 +52,11 @@ function File(props) {
       setPathInfo(null, null, pathname);
       setFileContents(newPath, content, pathname);
       setDirContents(pathWithoutName, data);
-      window.history.replaceState({}, "", pathWithoutName);
-      navigate(fileName + (fileType ? `.${fileType}` : ""));
+      window.history.replaceState(
+        {},
+        "",
+        pathWithoutName + fileName + (fileType ? `.${fileType}` : "")
+      );
     } catch (error) {
       console.error(error);
       navigate(`/error/${error.message.toLowerCase()}`);
