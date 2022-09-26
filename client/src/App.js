@@ -1,8 +1,15 @@
-import { useCallback, useState, useEffect } from "react";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+  Navigate,
+  Outlet,
+} from "react-router-dom";
 import Drive from "./pages/Drive";
 import Entity from "./pages/Entity";
 import Folder from "./pages/Folder";
+import Error from "./pages/Error";
 import "./App.css";
 import { assignToState } from "./utilities/reactUtils";
 
@@ -20,14 +27,14 @@ function App() {
     <div className="App">
       <BrowserRouter>
         <Routes>
-          <Route path="/" />
+          <Route path="/" element={<Navigate to="/login" />} />
 
           <Route path="/register" />
 
           <Route path="/login" />
 
-          <Route path="/error">
-            <Route path="*" />
+          <Route path="/error" element={<Outlet />}>
+            <Route path="*" element={<Error />} />
           </Route>
 
           <Route path="/:user" element={<Drive />}>

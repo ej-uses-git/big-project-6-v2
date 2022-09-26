@@ -8,9 +8,9 @@ function Entity(props) {
   const navigate = useNavigate();
 
   const [isDir, setIsDir] = useState(null);
+  const [renameOccured, setRenameOccured] = useState(false);
 
   const [pathsToType, setPathType] = props.pathsToType;
-  const [dirsToContents, setDirContents] = props.dirsToContents;
 
   const { pathname: tempPathname } = useResolvedPath();
   const pathname = tempPathname.endsWith("/")
@@ -18,10 +18,16 @@ function Entity(props) {
     : `${tempPathname}/`;
 
   useEffect(() => {
+    if (pathsToType[pathname]) return setIsDir(pathsToType[pathname] === "dir");
+    setIsDir(null);
+  }, [pathname, setIsDir]);
+
+  useEffect(() => {
+    if (isDir !== null) return;
     (async () => {
-      let entType = pathsToType[pathname];
-      if (entType) return setIsDir(entType === "dir");
       try {
+        const entType = pathsToType[pathname];
+        if (entType || entType === "") return setIsDir(entType === "dir");
         const [data, ok, status] = await getType(pathname);
         if (!ok) throw new Error(status + "\n " + data);
         setIsDir(data === "dir");
@@ -31,7 +37,7 @@ function Entity(props) {
         navigate(`/error/${error.message.toLowerCase()}`);
       }
     })();
-  }, [pathname]);
+  }, [isDir, navigate, pathname, pathsToType, setPathType]);
 
   return (
     <div className="entity">
@@ -44,6 +50,7 @@ function Entity(props) {
           />
         ) : (
           <File
+            setRenameOccured={setRenameOccured}
             pathsToType={props.pathsToType}
             pathsToInfo={props.pathsToInfo}
             dirsToContents={props.dirsToContents}
