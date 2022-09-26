@@ -10,7 +10,6 @@ function Entity(props) {
   const [isDir, setIsDir] = useState(null);
 
   const [pathsToType, setPathType] = props.pathsToType;
-  const [dirsToContents, setDirContents] = props.dirsToContents;
 
   const { pathname: tempPathname } = useResolvedPath();
   const pathname = tempPathname.endsWith("/")
@@ -19,7 +18,7 @@ function Entity(props) {
 
   useEffect(() => {
     (async () => {
-      let entType = pathsToType[pathname];
+      const entType = pathsToType[pathname];
       if (entType) return setIsDir(entType === "dir");
       try {
         const [data, ok, status] = await getType(pathname);
