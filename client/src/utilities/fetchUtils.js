@@ -6,6 +6,7 @@ async function getType(pathname) {
       method: "GET",
       redirect: "follow",
     });
+    console.log("Sent GET (Type) Request!");
     const data = await res.text();
     return [data, res.ok, res.status];
   } catch (error) {
@@ -19,6 +20,7 @@ async function getContents(pathname, type) {
       method: "GET",
       redirect: "follow",
     });
+    console.log("Sent GET (Content) Request!");
     let data;
     if (type === "dir") {
       data = await res.json();
@@ -37,6 +39,7 @@ async function getInfo(pathname) {
       method: "GET",
       redirect: "follow",
     });
+    console.log("Sent GET (Info) Request!");
     const data = await res.json();
     return [data, res.ok, res.status];
   } catch (error) {
@@ -53,6 +56,7 @@ async function editEntity(pathname, body) {
       redirect: "follow",
       headers: new Headers({ "Content-type": "application/json" }),
     });
+    console.log("Sent PUT (Edit Entity) Request!");
     const data = await res.json();
     return [data, res.ok, res.status];
   } catch (error) {
