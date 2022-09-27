@@ -12,6 +12,7 @@ import Folder from "./pages/Folder";
 import Error from "./pages/Error";
 import "./App.css";
 import { assignToState } from "./utilities/reactUtils";
+import Register from "./pages/Register";
 
 export const AppContext = createContext();
 
@@ -37,7 +38,7 @@ function App() {
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<Navigate to="/login" />} />
-            <Route path="/register" />
+            <Route path="/register" element={<Register />} />
             <Route path="/login" />
             <Route path="/error" element={<Outlet />}>
               <Route path="*" element={<Error />} />

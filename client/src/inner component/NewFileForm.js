@@ -7,6 +7,8 @@ import { getExtension } from "../utilities/reactUtils";
 function NewFileForm(props) {
   const navigate = useNavigate();
 
+  const { disappear } = props;
+
   const { pathname: tempPathname } = useResolvedPath();
   const pathname = tempPathname.endsWith("/")
     ? tempPathname
@@ -36,6 +38,7 @@ function NewFileForm(props) {
         if (!ok) throw new Error(status + " " + data);
         setDirContents(pathname, data);
         setPathType(pathname + fullName + "/");
+        disappear({ target: { tagName: "BODY" } });
       } catch (error) {
         console.error(error);
         navigate(`/error/${error.message.toLowerCase()}`);

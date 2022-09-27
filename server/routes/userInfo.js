@@ -15,9 +15,9 @@ router.post("/register", async (req, res, next) => {
     const username = Object.keys(req.body)[0];
     if (users[username])
       throw new Error(400, { cause: "Cannot register an existing user." });
-      
+
     //TODO: make the client send the password as already encrypted
-    users[username] = encryptPassword(req.body[username]);
+    users[username] = req.body[username];
     await fs.writeFile("./userdata/userdata.json", JSON.stringify(users));
     await fs.mkdir(path.join(__dirname, "../files", username));
     res.send(true);
