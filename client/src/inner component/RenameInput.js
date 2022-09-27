@@ -25,60 +25,57 @@ function RenameInput(props) {
     "DIR:CONTENT": [dirsToContents, setDirContents],
   } = useContext(AppContext);
 
-  const handleClick = useCallback(
-    async () => {
-      try {
-        if (fileName === originalName) return;
-        const newPath =
-          pathname + fileName + (fileType ? `.${fileType}/` : "/");
-        if (typeof pathsToType[newPath] === "string")
-          return alert("Please select unique name");
-        const [data, ok, status] = await editEntity(pathname + content, {
-          newName: fileName,
-        });
-        if (!ok) throw new Error(status + " " + data);
-        setPathType(
+  const handleClick = useCallback(async () => {
+    try {
+      if (fileName === originalName) return;
+      const newPath = pathname + fileName + (fileType ? `.${fileType}/` : "/");
+      if (typeof pathsToType[newPath] === "string")
+        return alert("Please select unique name");
+      const [data, ok, status] = await editEntity(pathname + content, {
+        newName: fileName,
+      });
+      if (!ok) throw new Error(status + " " + data);
+      setPathType(
+        newPath,
+        fileType || entFullName.type,
+        pathname + content + "/"
+      );
+      setPathInfo(newPath, null, pathname + content + "/", true);
+      setDirContents(pathname, data);
+      if (
+        entFullName.type === "dir" &&
+        dirsToContents[pathname + content + "/"]
+      ) {
+        setDirContents(
           newPath,
-          fileType || entFullName.type,
+          dirsToContents[pathname + content + "/"],
           pathname + content + "/"
         );
-        setPathInfo(newPath, null, pathname + content + "/", true);
-        setDirContents(pathname, data);
-        if (
-          entFullName.type === "dir" &&
-          dirsToContents[pathname + content + "/"]
-        ) {
-          setDirContents(
-            newPath,
-            dirsToContents[pathname + content + "/"],
-            pathname + content + "/"
-          );
-        }
-        disappear({ target: { tagName: "BODY" } });
-      } catch (error) {
-        navigate(`/error/${error.message.toLowerCase()}`);
       }
-    },
-    [
-      content,
-      disappear,
-      fileName,
-      fileType,
-      entFullName,
-      navigate,
-      originalName,
-      pathname,
-      dirsToContents,
-      pathsToType,
-      setDirContents,
-      setPathInfo,
-      setPathType,
-    ]
-  );
+      disappear({ target: { tagName: "BODY" } });
+    } catch (error) {
+      navigate(`/error/${error.message.toLowerCase()}`);
+    }
+  }, [
+    content,
+    disappear,
+    fileName,
+    fileType,
+    entFullName,
+    navigate,
+    originalName,
+    pathname,
+    dirsToContents,
+    pathsToType,
+    setDirContents,
+    setPathInfo,
+    setPathType,
+  ]);
 
   return (
-    <div>
+    <div className="display-form">
       <input
+        className="display-input"
         type="text"
         value={fileName}
         onChange={(e) => setFileName(e.target.value)}
@@ -86,8 +83,10 @@ function RenameInput(props) {
           if (e.key === "Enter") handleClick();
         }}
       />
-      <p>{fileType}</p>
-      <button onClick={handleClick}>SAVE</button>
+      <p className="display-type">{fileType}</p>
+      <button onClick={handleClick} className="btn smaller">
+        SAVE
+      </button>
     </div>
   );
 }

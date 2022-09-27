@@ -110,26 +110,27 @@ function File(props) {
   }, [fetchContent]);
 
   return (
-    <div>
-      <input
-        type="text"
-        value={fileName}
-        onChange={(e) => setFileName(e.target.value)}
-        onBlur={handleNameBlur}
-        onKeyUp={(e) => {
-          if (e.key === "Enter") handleNameBlur();
-        }}
-      />
-      <p>{fileType}</p>
+    <div className="file-page">
+      <div className="file-title">
+        <input
+          type="text"
+          value={fileName}
+          onChange={(e) => setFileName(e.target.value)}
+          onBlur={handleNameBlur}
+          onKeyUp={(e) => {
+            if (e.key === "Enter") handleNameBlur();
+          }}
+        />
+        <p>{fileType}</p>
+      </div>
       <textarea
         name="file-content"
         id="file-content"
         value={content}
         onChange={(e) => setContent(e.target.value)}
         onBlur={handleContentBlur}
+        className="file-body"
       ></textarea>
-
-      <Link to={pathWithoutName}>Back</Link>
     </div>
   );
 }

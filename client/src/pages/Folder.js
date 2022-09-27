@@ -11,6 +11,8 @@ import {
 } from "../utilities/fetchUtils";
 import { getExtension } from "../utilities/reactUtils";
 import { AppContext } from "../App";
+import PlusIcon from "../images/plus.svg";
+import UploadIcon from "../images/upload.svg";
 
 function Folder(props) {
   const navigate = useNavigate();
@@ -32,7 +34,7 @@ function Folder(props) {
   const fileInput = useRef();
 
   const {
-    "PATH:TYPE": [, setPathType],
+    "PATH:TYPE": [pathsToType, setPathType],
   } = useContext(AppContext);
   const {
     "PATH:INFO": [pathsToInfo, setPathInfo],
@@ -44,8 +46,8 @@ function Folder(props) {
   const handleContextMenu = useCallback(
     (event) => {
       event.preventDefault();
-      setSelected(event.target.title);
-      setAnchorPoint({ x: event.pageX, y: event.pageY });
+      setSelected(event.target.parentNode.title);
+      setAnchorPoint({ x: event.clientX, y: event.clientY });
       setHasContext(event.target.parentNode.title);
       setShowMenu(true);
     },
@@ -55,10 +57,14 @@ function Folder(props) {
   const handleClick = useCallback(
     (e) => {
       if (showMenu) setShowMenu(false);
-      if (e.target.tagName === "BODY" || e.target.tagName === "HTML") {
+      if (!e.target.className?.includes("cell")) {
         setSelected(null);
-        setShowDisplay(false);
       }
+      if (
+        !e.target.className?.includes("display") &&
+        !e.target.className?.includes("option")
+      )
+        setShowDisplay(false);
     },
     [showMenu, setShowMenu, setSelected]
   );
@@ -128,7 +134,9 @@ function Folder(props) {
   useEffect(() => {
     (async () => {
       try {
-        if (pathname !== originalPathname.current) return;
+        if (pathname !== originalPathname.current) {
+          if (pathsToType[pathname] !== "dir") return;
+        }
         const contents = dirsToContents[pathname];
         if (contents) return setFolderContents(contents);
         const [data, ok, status] = await getContents(pathname, "dir");
@@ -158,7 +166,7 @@ function Folder(props) {
   }, [dirsToContents, pathname, folderContents]);
 
   return (
-    <div>
+    <>
       {showMenu && (
         <ContextMenu
           anchorPoint={anchorPoint}
@@ -176,65 +184,101 @@ function Folder(props) {
         />
       )}
 
-      <form
-        onSubmit={async (e) => {
-          e.preventDefault();
-          try {
-            const files = fileInput.current.files;
-            const formData = new FormData();
-            for (let file of files) {
-              formData.append("file", file);
-              formData.append("type", "upload");
-            }
-            const [data, ok, status] = await uploadFile(pathname, formData);
-            if (!ok) throw new Error(status + " " + data);
-            setDirContents(pathname, data);
-          } catch (error) {
-            navigate(`/error/${error.message.toLowerCase()}`);
-          }
-        }}
-      >
-        <label htmlFor="upload-file">Upload new File</label>
-        <input type="file" name="uploadFile" id="upload-file" ref={fileInput} />
-        <button>UPLOAD</button>
-      </form>
+      <div className="folder-page">
+        <div className="folder-holder">
+          <table className="folder-table">
+            <thead className="folder-headings">
+              <tr>
+                <th className="name-heading">Name</th>
+                <th className="type-heading">Type</th>
+              </tr>
+            </thead>
+            <tbody className="folder-body">
+              {folderContents.map(({ name, type }) => (
+                <tr
+                  className={
+                    "folder-entity" +
+                    (selected === name + getExtension(type) ? " selected" : "")
+                  }
+                  key={name + getExtension(type)}
+                  title={name + getExtension(type)}
+                  onClick={(e) => {
+                    if (selected === name + getExtension(type))
+                      return navigate(
+                        `${pathname}${name + getExtension(type)}`
+                      );
+                    setSelected(name + getExtension(type));
+                  }}
+                  onContextMenu={handleContextMenu}
+                >
+                  <td className="name-cell">{name}</td>
+                  <td className="type-cell">{type}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        <div className="action-buttons">
+          <form
+            className="upload-form"
+            onSubmit={async (e) => {
+              e.preventDefault();
+              try {
+                const files = fileInput.current.files;
+                const formData = new FormData();
+                for (let file of files) {
+                  formData.append("file", file);
+                  formData.append("type", "upload");
+                }
+                const [data, ok, status] = await uploadFile(pathname, formData);
+                if (!ok) throw new Error(status + " " + data);
+                setDirContents(pathname, data);
+              } catch (error) {
+                navigate(`/error/${error.message.toLowerCase()}`);
+              }
+            }}
+          >
+            <label htmlFor="upload-file" className="upload-label">
+              Upload new File
+            </label>
+            <input
+              required
+              type="file"
+              name="uploadFile"
+              id="upload-file"
+              ref={fileInput}
+              className="file-input"
+            />
+            <button
+              className="btn smaller inverted"
+              type="submit"
+              id="submit"
+              style={{ display: "none" }}
+            ></button>
 
-      <button
-        onClick={() => {
-          setDisplay({ mode: "create", content: "" });
-          setShowDisplay(true);
-        }}
-      >
-        Create new file (SVG goes here)
-      </button>
+            <label htmlFor="submit">
+              <img src={UploadIcon} className="icon" />
+            </label>
+          </form>
 
-      <table>
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Type</th>
-          </tr>
-        </thead>
-
-        <tbody>
-          {folderContents.map(({ name, type }) => (
-            <tr
-              key={name + getExtension(type)}
-              title={name + getExtension(type)}
-              onClick={(e) => {
-                if (selected === name + getExtension(type))
-                  return navigate(`${pathname}${name + getExtension(type)}`);
-                setSelected(name + getExtension(type));
+          <div className="create-file container">
+            <label htmlFor="create" className="create-file-label">
+              Create new file
+            </label>
+            <img
+              src={PlusIcon}
+              alt=""
+              className="icon display-icon"
+              id="create"
+              onClick={() => {
+                setDisplay({ mode: "create", content: "" });
+                setShowDisplay(true);
               }}
-              onContextMenu={handleContextMenu}
-            >
-              <td>{name}</td>
-              <td>{type}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
+            />
+          </div>
+        </div>
+      </div>
+    </>
   );
 }
 

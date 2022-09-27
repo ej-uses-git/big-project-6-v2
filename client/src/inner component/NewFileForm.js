@@ -57,33 +57,51 @@ function NewFileForm(props) {
   );
 
   return (
-    <form onSubmit={handleSubmit}>
-      <label htmlFor="new-name">Enter the file's name:</label>
-      <input
-        type="text"
-        name="fileName"
-        id="new-name"
-        value={fileName}
-        onChange={(e) => {
-          setFileName(e.target.value);
-        }}
-      />
+    <form onSubmit={handleSubmit} className="display-form">
+      <div className="display-holder">
+        <label htmlFor="new-name" className="display-label">
+          Enter the file's name:
+        </label>
+        <input
+          type="text"
+          name="fileName"
+          id="new-name"
+          value={fileName}
+          onChange={(e) => {
+            setFileName(e.target.value);
+          }}
+          className="display-input"
+        />
+      </div>
 
-      <label htmlFor="type">Enter the file's type:</label>
-      <select
-        name="type"
-        id="type"
-        value={type}
-        onChange={(e) => {
-          setType(e.target.value);
-          if (e.target.value === "dir") setContent("");
-        }}
-      >
-        <option value="txt">.txt</option>
-        <option value="json">.json</option>
-        <option value="html">.html</option>
-        <option value="dir">Directory</option>
-      </select>
+      <div className="display-holder">
+        <label htmlFor="type" className="display-label">
+          Enter the file's type:
+        </label>
+        <select
+          name="type"
+          id="type"
+          value={type}
+          onChange={(e) => {
+            setType(e.target.value);
+            if (e.target.value === "dir") setContent("");
+          }}
+          className="diplay-select"
+        >
+          <option value="txt" className="option">
+            .txt
+          </option>
+          <option value="json" className="option">
+            .json
+          </option>
+          <option value="html" className="option">
+            .html
+          </option>
+          <option value="dir" className="option">
+            Directory
+          </option>
+        </select>
+      </div>
 
       <textarea
         name="content"
@@ -93,9 +111,12 @@ function NewFileForm(props) {
         onChange={(e) => {
           setContent(e.target.value);
         }}
+        className="option"
       ></textarea>
 
-      <button type="submit">CREATE FILE</button>
+      <button type="submit" className="display-btn btn">
+        CREATE FILE
+      </button>
     </form>
   );
 }

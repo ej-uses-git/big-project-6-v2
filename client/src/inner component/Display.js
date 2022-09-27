@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import CopyNameInput from "./CopyNameInput";
 import DeleteConfirm from "./DeleteConfirm";
 import NewFileForm from "./NewFileForm";
@@ -8,11 +9,11 @@ function Display(props) {
   return (
     <div className="display">
       {mode === "info" && (
-        <ul>
+        <ul className="display-list">
           {Object.keys(content).map((key) => (
-            <li key={key}>
-              <div className="key">{key}:</div>
-              <div className="value">{content[key]}</div>
+            <li key={key} className="display-pair">
+              <div className="display-key">{key}:</div>
+              <div className="display-value">{content[key]}</div>
             </li>
           ))}
         </ul>

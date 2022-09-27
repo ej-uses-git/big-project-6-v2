@@ -1,0 +1,677 @@
+/** css variables */
+:root {
+  --main: #628395;
+  --second: #dbad6a;
+  --accent: #cf995f;
+  --black: #080708;
+  --white: #d8dcff;
+}
+
+/** general styles */
+* {
+  box-sizing: border-box;
+
+  margin: 0;
+  padding: 0;
+
+  text-align: center;
+}
+
+.btn {
+  /* size (width, min-height, padding, etc) */
+
+  /* position and display (includes: inner layout) */
+
+  /* text formatting */
+  font-weight: 600;
+  font-size: 1.9vw;
+
+  /* color (includes: border/shadow) */
+  background-color: var(--white);
+  border: 0.07vw solid var(--black);
+  border-radius: 1.1vw;
+  box-shadow: 0.15vw 0.15vw 0.05vw var(--black);
+}
+
+.btn:hover {
+  cursor: pointer;
+
+  /* size (width, min-height, padding, etc) */
+
+  /* position and display (includes: inner layout) */
+  transform: translateY(-0.3vw);
+  transition: all 0.1s;
+
+  /* text formatting */
+
+  /* color (includes: border/shadow) */
+  background-color: var(--accent);
+}
+
+.inverted {
+  background-color: var(--accent);
+}
+
+.inverted:hover {
+  background-color: var(--main);
+}
+
+label {
+  /* size (width, min-height, padding, etc) */
+
+  /* position and display (includes: inner layout) */
+
+  /* text formatting */
+
+  /* color (includes: border/shadow) */
+  color: var(--black);
+}
+
+label:hover {
+  cursor: pointer;
+
+  /* size (width, min-height, padding, etc) */
+  transition: all 0.3s;
+
+  /* position and display (includes: inner layout) */
+
+  /* text formatting */
+  text-shadow: 0.05vw 0.05vw var(--black);
+
+  /* color (includes: border/shadow) */
+  color: var(--main);
+}
+
+.link {
+  /* size (width, min-height, padding, etc) */
+
+  /* position and display (includes: inner layout) */
+  transition: all 0.2s;
+
+  /* text formatting */
+  font-weight: 600;
+  text-shadow: 0.05vw 0.05vw var(--black);
+
+  /* color (includes: border/shadow) */
+  color: var(--accent);
+}
+
+.link:hover {
+  /* size (width, min-height, padding, etc) */
+
+  /* position and display (includes: inner layout) */
+
+  /* text formatting */
+
+  /* color (includes: border/shadow) */
+  color: #d8870d;
+}
+
+textarea {
+  resize: none;
+
+  width: 30vw;
+  min-height: 20vw;
+
+  padding: 1vw;
+}
+
+input {
+  padding: 0.3vw;
+
+  font-weight: 500;
+  font-size: 1.3vw;
+  text-align: start;
+
+  /* color (includes: border/shadow) */
+  background-color: rgba(216, 220, 255, 0.85);
+  border: 0.1vw solid var(--black);
+  border-radius: 0.3vw;
+  outline: none;
+}
+
+/** body and app */
+body {
+  width: 100vw;
+  min-height: 100vh;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  gap: 1.5vw;
+
+  background-color: var(--white);
+}
+
+/** login and registration forms */
+.user-form {
+  /* size (width, min-height, padding, etc) */
+  width: 75vw;
+  min-height: 40vw;
+
+  /* position and display (includes: inner layout) */
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+
+  padding: 1.5vw;
+  gap: 1.5vw;
+
+  /* text formatting */
+
+  /* color (includes: border/shadow) */
+  background-color: var(--main);
+  border: 0.1vw solid var(--black);
+  border-radius: 2.3vw;
+  box-shadow: 0.15vw 0.15vw 0.07vw rgba(8, 7, 8, 0.5);
+}
+
+.form-body {
+  /* size (width, min-height, padding, etc) */
+
+  /* position and display (includes: inner layout) */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  gap: 1.5vw;
+
+  /* text formatting */
+
+  /* color (includes: border/shadow) */
+}
+
+.form-title {
+  /* size (width, min-height, padding, etc) */
+
+  /* position and display (includes: inner layout) */
+
+  /* text formatting */
+  font-weight: 700;
+  font-size: 4vw;
+  letter-spacing: 0.1vw;
+  text-shadow: 0.17vw 0.17vw rgba(8, 7, 8, 0.5);
+
+  /* color (includes: border/shadow) */
+  color: var(--white);
+}
+
+.form-submit {
+  /* size (width, min-height, padding, etc) */
+  width: 20vw;
+  min-height: 7vw;
+
+  /* position and display (includes: inner layout) */
+
+  /* text formatting */
+
+  /* color (includes: border/shadow) */
+}
+
+.form-container {
+  /* size (width, min-height, padding, etc) */
+  width: 65vw;
+  min-height: 8vw;
+
+  /* position and display (includes: inner layout) */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  padding: 2vw;
+
+  /* text formatting */
+
+  /* color (includes: border/shadow) */
+  background-color: var(--accent);
+  border: 0.1vw solid var(--black);
+  border-radius: 0.8vw;
+  box-shadow: 0.17vw 0.17vw rgba(8, 7, 8, 0.5);
+}
+
+.form-label {
+  /* size (width, min-height, padding, etc) */
+
+  /* position and display (includes: inner layout) */
+
+  /* text formatting */
+  font-weight: 600;
+  font-size: 1.8vw;
+
+  /* color (includes: border/shadow) */
+}
+
+.form-input {
+  /* size (width, min-height, padding, etc) */
+  width: 30vw;
+  min-height: 2.5vw;
+
+  /* position and display (includes: inner layout) */
+  padding: 0.6vw;
+
+  /* text formatting */
+  font-weight: 500;
+  font-size: 1.3vw;
+  text-align: start;
+
+  /* color (includes: border/shadow) */
+  background-color: rgba(216, 220, 255, 0.85);
+  border: 0.1vw solid var(--black);
+  border-radius: 0.3vw;
+  outline: none;
+}
+
+.form-footer {
+  /* size (width, min-height, padding, etc) */
+
+  /* position and display (includes: inner layout) */
+
+  /* text formatting */
+  font-size: 1.4vw;
+
+  /* color (includes: border/shadow) */
+  color: var(--black);
+}
+
+#register-footer {
+  /* size (width, min-height, padding, etc) */
+
+  /* position and display (includes: inner layout) */
+  position: absolute;
+  top: 1vw;
+  left: 2vw;
+
+  /* text formatting */
+
+  /* color (includes: border/shadow) */
+}
+
+/* *logged-in pages shared layout */
+.user-page {
+  /* size (width, min-height, padding, etc) */
+  width: 100vw;
+  min-height: 100vh;
+
+  /* position and display (includes: inner layout) */
+  position: relative;
+
+  /* text formatting */
+
+  /* color (includes: border/shadow) */
+}
+
+.page-header {
+  /* size (width, min-height, padding, etc) */
+  width: 100vw;
+
+  /* position and display (includes: inner layout) */
+  position: absolute;
+  top: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  padding: 1.5vw;
+
+  /* text formatting */
+
+  /* color (includes: border/shadow) */
+}
+
+.user-message {
+  /* size (width, min-height, padding, etc) */
+
+  /* position and display (includes: inner layout) */
+
+  /* text formatting */
+  font-weight: 700;
+  font-size: 2.8vw;
+  letter-spacing: 0.08vw;
+
+  /* color (includes: border/shadow) */
+  color: var(--black);
+}
+
+.smaller {
+  /* size (width, min-height, padding, etc) */
+
+  /* position and display (includes: inner layout) */
+  padding: 0.5vw;
+
+  /* text formatting */
+
+  /* color (includes: border/shadow) */
+}
+
+/** folder page */
+.folder-page {
+  /* size (width, min-height, padding, etc) */
+  width: 100vw;
+
+  /* position and display (includes: inner layout) */
+  position: absolute;
+  bottom: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  padding: 1.5vw;
+
+  /* text formatting */
+
+  /* color (includes: border/shadow) */
+}
+
+.folder-holder {
+  /* size (width, min-height, padding, etc) */
+  width: 65vw;
+  min-height: 80vh;
+
+  /* position and display (includes: inner layout) */
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+
+  padding-top: 1.5vw;
+  overflow: auto;
+  -ms-overflow-style: none; /*? IE and Edge */
+  scrollbar-width: none; /*? Firefox */
+
+  /* text formatting */
+
+  /* color (includes: border/shadow) */
+  background-color: var(--main);
+  border: 0.1vw solid var(--black);
+}
+
+.folder-holder::-webkit-scrollbar {
+  display: none;
+}
+
+.folder-table {
+  /* size (width, min-height, padding, etc) */
+  width: 90%;
+
+  /* position and display (includes: inner layout) */
+
+  /* text formatting */
+
+  /* color (includes: border/shadow) */
+}
+
+.folder-headings {
+  /* size (width, min-height, padding, etc) */
+  width: 100%;
+
+  /* position and display (includes: inner layout) */
+
+  /* text formatting */
+
+  /* color (includes: border/shadow) */
+  background-color: var(--white);
+}
+
+.folder-entity {
+  /* size (width, min-height, padding, etc) */
+  height: 3vw;
+
+  /* position and display (includes: inner layout) */
+
+  /* text formatting */
+
+  /* color (includes: border/shadow) */
+  background-color: var(--accent);
+}
+
+.folder-entity:hover {
+  cursor: context-menu;
+
+  /* size (width, min-height, padding, etc) */
+
+  /* position and display (includes: inner layout) */
+
+  /* text formatting */
+
+  /* color (includes: border/shadow) */
+}
+
+.folder-entity.selected {
+  background-color: #d295bf;
+}
+
+.upload-form {
+  /* size (width, min-height, padding, etc) */
+  min-height: 50vh;
+
+  /* position and display (includes: inner layout) */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  gap: 1vw;
+
+  /* text formatting */
+
+  /* color (includes: border/shadow) */
+}
+
+/* custom context menu */
+.menu {
+  /* size (width, min-height, padding, etc) */
+  width: 10vw;
+  min-height: 15vw;
+
+  /* position and display (includes: inner layout) */
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: stretch;
+  transition: opacity 0.5s linear;
+
+  /* text formatting */
+  list-style: none;
+  font-size: 1.1vw;
+
+  /* color (includes: border/shadow) */
+  background-color: var(--white);
+  border: 0.1vw solid var(--main);
+  border-radius: 2px;
+  box-shadow: 0 0 10px 0 var(--off-white);
+  z-index: 1000;
+}
+
+.option {
+  /* size (width, min-height, padding, etc) */
+  height: 3vw;
+
+  /* position and display (includes: inner layout) */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  /* text formatting */
+
+  /* color (includes: border/shadow) */
+}
+
+.option:hover {
+  cursor: context-menu;
+
+  background-color: var(--accent);
+}
+
+/** on-page displays */
+.display {
+  width: 50vw;
+  min-height: 80vh;
+
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  top: 10vh;
+  left: 50%;
+  transform: translate(-50%, 0);
+
+  padding: 3vw;
+  gap: 1.5vw;
+
+  background-color: var(--black);
+  color: var(--white);
+  box-shadow: 0 0 30vh 70vh #d8dcffe6;
+  z-index: 100;
+}
+
+.display-pair {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 5vw;
+}
+
+.display-key {
+  font-weight: bold;
+}
+
+.display-value {
+  text-align: end;
+}
+
+.display-form {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  
+  gap: 1.5vw;
+}
+
+.display-label {
+  color: var(--white);
+}
+
+.display-delete-buttons {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  margin-top: 1.5vw;
+  
+  gap: 1.5vw;
+}
+
+/** action buttons */
+.action-buttons {
+  /* size (width, min-height, padding, etc) */
+  width: 40vw;
+  min-height: 80vh;
+
+  /* position and display (includes: inner layout) */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
+  /* text formatting */
+
+  /* color (includes: border/shadow) */
+}
+
+.file-input {
+  /* size (width, min-height, padding, etc) */
+  width: 20vw;
+  align-self: stretch;
+
+  /* position and display (includes: inner layout) */
+
+  /* text formatting */
+
+  /* color (includes: border/shadow) */
+}
+
+.upload-label {
+  font-size: 2vw;
+  font-weight: 700;
+}
+
+input[type="file"] {
+  display: flex;
+  justify-content: flex-end;
+  margin-left: auto;
+  background-color: var(--accent);
+  cursor: default;
+  align-items: center;
+  color: inherit;
+  text-overflow: ellipsis;
+  white-space: pre;
+  padding: 1vw;
+  border: initial;
+  overflow: hidden !important;
+  font-size: 1.2vw;
+  border-radius: 1vw;
+  font-weight: 600;
+}
+
+.create-file {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  gap: 1.5vw;
+}
+
+.create-file-label {
+  font-weight: 700;
+  font-size: 1.9vw;
+}
+
+.icon {
+  object-fit: contain;
+  width: 7vw;
+  height: 7vw;
+  transform: translateY(0.3vw);
+}
+
+.icon:hover {
+  cursor: pointer;
+  transition: all 0.3s;
+  transform: translateY(-0.1vw);
+}
+
+.file-page {
+    /* size (width, min-height, padding, etc) */
+    width: 100vw;
+
+    /* position and display (includes: inner layout) */
+    position: absolute;
+    bottom: 5vw;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    
+    gap: 1.5vw;
+  
+    /* text formatting */
+  
+    /* color (includes: border/shadow) */
+  
+}
+
+.file-title {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  
+  gap: 1.5vw;
+}
+
+.file-body {
+  min-height: 30vw;
+}

@@ -67,54 +67,77 @@ function Register(props) {
   );
 
   return (
-    <div>
-      <form action="" onSubmit={handleSubmit}>
-        <label htmlFor="username">Enter username:</label>
-        <input
-          required
-          ref={usernameInput}
-          type="text"
-          name="username"
-          id="username"
-          value={username}
-          onChange={(e) => {
-            setUsername(e.target.value);
-            e.target.setCustomValidity("");
-          }}
-        />
+    <div className="user-form">
+      <h1 className="form-title title">SIGN UP</h1>
+      
+      <form action="" onSubmit={handleSubmit} className="form-body">
+        <div className="form-container container">
+          <label htmlFor="username" className="form-label">
+            Enter username:
+          </label>
+          <input
+            required
+            autoComplete="off"
+            ref={usernameInput}
+            type="text"
+            name="username"
+            id="username"
+            value={username}
+            onChange={(e) => {
+              setUsername(e.target.value);
+              e.target.setCustomValidity("");
+            }}
+            className="form-input"
+          />
+        </div>
 
-        <label htmlFor="password-a">Enter a password:</label>
-        <input
-          required
-          ref={passAInput}
-          type="password"
-          name="passwordA"
-          id="password-a"
-          value={passwordA}
-          onChange={(e) => {
-            setPasswordA(e.target.value);
-            e.target.setCustomValidity("");
-          }}
-        />
+        <div className="form-container container">
+          <label htmlFor="password-a" className="form-label">
+            Enter a password:
+          </label>
+          <input
+            required
+            ref={passAInput}
+            type="password"
+            name="passwordA"
+            id="password-a"
+            value={passwordA}
+            onChange={(e) => {
+              setPasswordA(e.target.value);
+              e.target.setCustomValidity("");
+            }}
+            className="form-input"
+          />
+        </div>
 
-        <label htmlFor="password-b">Confirm password:</label>
-        <input
-          required
-          type="password"
-          name="passwordB"
-          id="password-b"
-          value={passwordB}
-          onChange={(e) => {
-            setPasswordB(e.target.value);
-            passAInput.current.setCustomValidity("");
-          }}
-        />
+        <div className="form-container container">
+          <label htmlFor="password-b" className="form-label">
+            Confirm password:
+          </label>
+          <input
+            required
+            type="password"
+            name="passwordB"
+            id="password-b"
+            value={passwordB}
+            onChange={(e) => {
+              setPasswordB(e.target.value);
+              passAInput.current.setCustomValidity("");
+            }}
+            className="form-input"
+          />
+        </div>
 
-        <input type="checkbox" name="not-a-bot" id="not-a-bot" required />
-
-        <button type="submit">REGISTER</button>
+        <button type="submit" className="form-submit btn">
+          REGISTER
+        </button>
       </form>
-      Already signed up? <Link to="/login">Log in here!</Link>
+      <div className="form-footer" id="register-footer">
+        Already signed up?{" "}
+        <Link to="/login" className="form-link link">
+          Log in here!
+        </Link>
+      </div>
     </div>
   );
 }
