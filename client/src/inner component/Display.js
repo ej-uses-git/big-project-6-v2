@@ -1,3 +1,4 @@
+import CopyNameInput from "./CopyNameInput";
 import DeleteConfirm from "./DeleteConfirm";
 import RenameInput from "./RenameInput";
 
@@ -26,6 +27,14 @@ function Display(props) {
 
       {mode === "delete" && (
         <DeleteConfirm
+          content={content}
+          disappear={props.disappear}
+          entFullName={props.entFullName}
+        />
+      )}
+
+      {mode === "copy" && (
+        <CopyNameInput
           content={content}
           disappear={props.disappear}
           entFullName={props.entFullName}

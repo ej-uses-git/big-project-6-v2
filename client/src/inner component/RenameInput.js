@@ -70,6 +70,7 @@ function RenameInput(props) {
       originalName,
       pathname,
       dirsToContents,
+      pathsToType, //!
       setDirContents,
       setPathInfo,
       setPathType,

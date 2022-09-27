@@ -78,4 +78,20 @@ async function deleteEntity(pathname) {
   }
 }
 
-export { getType, getContents, editEntity, getInfo, deleteEntity };
+async function copyEntity(pathname, newName) {
+  try {
+    const res = await fetch(`${SERVER_URL}/api/drive${pathname}`, {
+      method: "POST",
+      redirect: "follow",
+      body: JSON.stringify({ mode: "copy", newName }),
+      headers: new Headers({ "Content-type": "application/json" }),
+    });
+    console.log("Sent POST (Copy) Request!");
+    const data = await res.json();
+    return [data, res.ok, res.status];
+  } catch (error) {
+    return [null, false, error.message];
+  }
+}
+
+export { getType, getContents, editEntity, getInfo, deleteEntity, copyEntity };

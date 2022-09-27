@@ -89,6 +89,8 @@ function Folder(props) {
             break;
           case "copy":
             // show new name selection
+            setDisplay({ mode: "copy", content: hasContext });
+            setShowDisplay(true);
             // copy on selection
             break;
           case "download":

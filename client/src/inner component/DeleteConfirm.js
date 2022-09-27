@@ -19,7 +19,7 @@ function DeleteConfirm(props) {
     "PATH:INFO": [, setPathInfo],
   } = useContext(AppContext);
   const {
-    "DIR:CONTENT": [dirsToContents, setDirContents],
+    "DIR:CONTENT": [, setDirContents],
   } = useContext(AppContext);
   const {
     "FILE:CONTENT": [, setFileContents],
@@ -42,7 +42,17 @@ function DeleteConfirm(props) {
       console.error(error);
       navigate(`/error/${error.message.toLowerCase()}`);
     }
-  }, []);
+  }, [
+    content,
+    disappear,
+    entFullName.type,
+    navigate,
+    pathname,
+    setDirContents,
+    setFileContents,
+    setPathInfo,
+    setPathType,
+  ]);
 
   return (
     <div className="delete-confirm">
