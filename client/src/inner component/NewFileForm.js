@@ -86,18 +86,18 @@ function NewFileForm(props) {
             setType(e.target.value);
             if (e.target.value === "dir") setContent("");
           }}
-          className="diplay-select"
+          className="display-select"
         >
-          <option value="txt" className="option">
+          <option value="txt" className="display-option">
             .txt
           </option>
-          <option value="json" className="option">
+          <option value="json" className="display-option">
             .json
           </option>
-          <option value="html" className="option">
+          <option value="html" className="display-option">
             .html
           </option>
-          <option value="dir" className="option">
+          <option value="dir" className="display-option">
             Directory
           </option>
         </select>
@@ -114,7 +114,7 @@ function NewFileForm(props) {
         className="option"
       ></textarea>
 
-      <button type="submit" className="display-btn btn">
+      <button type="submit" className="display-btn btn smaller">
         CREATE FILE
       </button>
     </form>
