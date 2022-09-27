@@ -56,7 +56,6 @@ function RenameInput(props) {
         }
         disappear({ target: { tagName: "BODY" } });
       } catch (error) {
-        console.error(error);
         navigate(`/error/${error.message.toLowerCase()}`);
       }
     },
@@ -78,7 +77,7 @@ function RenameInput(props) {
   );
 
   return (
-    <div className="rename-input">
+    <div>
       <input
         type="text"
         value={fileName}

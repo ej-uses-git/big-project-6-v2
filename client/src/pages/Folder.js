@@ -109,10 +109,9 @@ function Folder(props) {
             download(data, hasContext);
             break;
           default:
-            console.error(new Error("What the fuck?"));
+            throw new Error("what the fuck");
         }
       } catch (error) {
-        console.error(error.message);
         navigate(`/error/${error.message}`);
       }
     },
@@ -144,7 +143,6 @@ function Folder(props) {
           setPathType(entPath, type);
         });
       } catch (error) {
-        console.error(error);
         navigate(`/error/${error.message.toLowerCase()}`);
       }
     })();
@@ -160,7 +158,7 @@ function Folder(props) {
   }, [dirsToContents, pathname, folderContents]);
 
   return (
-    <div className="folder">
+    <div>
       {showMenu && (
         <ContextMenu
           anchorPoint={anchorPoint}
@@ -192,7 +190,6 @@ function Folder(props) {
             if (!ok) throw new Error(status + " " + data);
             setDirContents(pathname, data);
           } catch (error) {
-            console.error(error);
             navigate(`/error/${error.message.toLowerCase()}`);
           }
         }}

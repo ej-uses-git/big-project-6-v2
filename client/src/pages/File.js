@@ -45,7 +45,6 @@ function File(props) {
       originalContents.current = data;
       setFileContents(pathname, data);
     } catch (error) {
-      console.error(error);
       navigate(`/error/${error.message.toLowerCase()}`);
     }
   }, [pathname, navigate, setFileContents]);
@@ -70,7 +69,6 @@ function File(props) {
           pathWithoutName + fileName + (fileType ? `.${fileType}` : "")
         );
       } catch (error) {
-        console.error(error);
         navigate(`/error/${error.message.toLowerCase()}`);
       }
     },
@@ -101,7 +99,6 @@ function File(props) {
       setPathInfo(null, null, pathname);
       originalContents.current = content;
     } catch (error) {
-      console.error(error);
       navigate(`/error/${error.message.toLowerCase()}`);
     }
   }, [pathname, content, navigate, setFileContents, setPathInfo]);
@@ -113,7 +110,7 @@ function File(props) {
   }, [fetchContent]);
 
   return (
-    <div className="file">
+    <div>
       <input
         type="text"
         value={fileName}

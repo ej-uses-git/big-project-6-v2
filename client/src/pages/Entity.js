@@ -38,14 +38,13 @@ function Entity(props) {
         setIsDir(data === "dir");
         setPathType(pathname, data);
       } catch (error) {
-        console.error(error);
         navigate(`/error/${error.message.toLowerCase()}`);
       }
     })();
   }, [isDir, navigate, pathname, pathsToType, setPathType]);
 
   return (
-    <div className="entity">
+    <div>
       {isDir !== null && (isDir ? <Folder /> : <File />)}
     </div>
   );

@@ -154,7 +154,6 @@ async function registerUser(body) {
     if (res.ok) return true;
     else return false;
   } catch (error) {
-    console.error(error);
     return error;
   }
 }
@@ -171,7 +170,6 @@ async function loginUser(body) {
     if (res.ok) return true;
     else return false;
   } catch (error) {
-    console.error(error);
     return error;
   }
 }

@@ -34,7 +34,7 @@ function App() {
   };
 
   return (
-    <div className="App">
+    <div>
       <AppContext.Provider value={ContextValues}>
         <BrowserRouter>
           <Routes>

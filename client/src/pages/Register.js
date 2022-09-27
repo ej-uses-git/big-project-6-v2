@@ -67,7 +67,7 @@ function Register(props) {
   );
 
   return (
-    <div className="register-form">
+    <div>
       <form action="" onSubmit={handleSubmit}>
         <label htmlFor="username">Enter username:</label>
         <input

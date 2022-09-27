@@ -39,7 +39,6 @@ function DeleteConfirm(props) {
       setDirContents(pathname, data);
       disappear({ target: { tagName: "BODY" } });
     } catch (error) {
-      console.error(error);
       navigate(`/error/${error.message.toLowerCase()}`);
     }
   }, [
@@ -55,7 +54,7 @@ function DeleteConfirm(props) {
   ]);
 
   return (
-    <div className="delete-confirm">
+    <div>
       Are you sure? This action cannot be undone!
       <button onClick={handleDelete}>YES</button>
       <button>NO</button>

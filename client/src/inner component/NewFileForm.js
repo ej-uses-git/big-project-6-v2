@@ -40,7 +40,6 @@ function NewFileForm(props) {
         setPathType(pathname + fullName + "/");
         disappear({ target: { tagName: "BODY" } });
       } catch (error) {
-        console.error(error);
         navigate(`/error/${error.message.toLowerCase()}`);
       }
     },
@@ -58,7 +57,7 @@ function NewFileForm(props) {
   );
 
   return (
-    <form className="new-file-form" onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit}>
       <label htmlFor="new-name">Enter the file's name:</label>
       <input
         type="text"

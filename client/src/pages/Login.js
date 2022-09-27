@@ -28,7 +28,7 @@ function Login(props) {
   }, [navigate, password, username]);
 
   return (
-    <div className="login-form">
+    <div>
       <form action="" onSubmit={handleSubmit}>
         <label htmlFor="username">Enter username:</label>
         <input

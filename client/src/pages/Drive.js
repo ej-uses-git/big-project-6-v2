@@ -17,7 +17,7 @@ function Drive() {
   }, [navigate, setPathType, user]);
 
   return (
-    <div className="drive">
+    <div>
       <Link
         to="/login"
         onClick={() => {

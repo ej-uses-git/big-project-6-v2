@@ -40,7 +40,6 @@ function CopyNameInput(props) {
       }
       disappear({ target: { tagName: "BODY" } });
     } catch (error) {
-      console.error(error);
       navigate(`/error/${error.message.toLowerCase()}`);
     }
   }, [
@@ -59,7 +58,7 @@ function CopyNameInput(props) {
   ]);
 
   return (
-    <div className="copy-name-input">
+    <div>
       <input
         type="text"
         value={fileName}
