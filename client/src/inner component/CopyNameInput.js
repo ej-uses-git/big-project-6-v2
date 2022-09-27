@@ -26,6 +26,7 @@ function CopyNameInput(props) {
     try {
       if (fileName === originalName) return;
       const newPath = pathname + fileName + (fileType ? `.${fileType}/` : "/");
+      alert(pathsToType[newPath]);
       if (typeof pathsToType[newPath] === "string")
         return alert("Please select unique name");
       const [data, ok, status] = await copyEntity(pathname + content, fileName);
@@ -59,17 +60,21 @@ function CopyNameInput(props) {
 
   return (
     <div className="display-form">
-      <label htmlFor="" className="display-label">Please select new name:</label>
-      <input
-        type="text"
-        value={fileName}
-        onChange={(e) => setFileName(e.target.value)}
-        onKeyUp={(e) => {
-          if (e.key === "Enter") handleClick();
-        }}
-        className="display-input"
-      />
-      <p className="display-type">{fileType}</p>
+      <label htmlFor="" className="display-label">
+        Please select new name:
+      </label>
+      <div className="display-holder">
+        <input
+          type="text"
+          value={fileName}
+          onChange={(e) => setFileName(e.target.value)}
+          onKeyUp={(e) => {
+            if (e.key === "Enter") handleClick();
+          }}
+          className="display-input"
+        />
+        <p className="display-type">{fileType}</p>
+      </div>
       <button onClick={handleClick} className="display-btn btn smaller">
         SAVE
       </button>
