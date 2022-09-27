@@ -64,4 +64,18 @@ async function editEntity(pathname, body) {
   }
 }
 
-export { getType, getContents, editEntity, getInfo };
+async function deleteEntity(pathname) {
+  try {
+    const res = await fetch(`${SERVER_URL}/api/drive${pathname}`, {
+      method: "DELETE",
+      redirect: "follow",
+    });
+    console.log("Sent DELETE Request!");
+    const data = await res.json();
+    return [data, res.ok, res.status];
+  } catch (error) {
+    return [null, false, error.message];
+  }
+}
+
+export { getType, getContents, editEntity, getInfo, deleteEntity };

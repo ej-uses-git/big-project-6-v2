@@ -31,10 +31,6 @@ function App() {
     "FILE:CONTENT": [filesToContents, assignToState(setFilesToContents)],
   };
 
-  useEffect(() => {
-    console.log("\n== PATH:TYPE ==\n", pathsToType, "\n");
-  }, [pathsToType]);
-
   return (
     <div className="App">
       <AppContext.Provider value={ContextValues}>

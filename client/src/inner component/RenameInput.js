@@ -5,13 +5,12 @@ import { AppContext } from "../App";
 
 function RenameInput(props) {
   const navigate = useNavigate();
-  const { disappear, entFullName } = props;
+  const { content, disappear, entFullName } = props;
 
   const { pathname: tempPathname } = useResolvedPath();
   const pathname = tempPathname.endsWith("/")
     ? tempPathname
     : `${tempPathname}/`;
-  const { content } = props;
   const fileType = content.split(".").slice(1).join(".");
   const originalName = content.split(".")[0];
   const [fileName, setFileName] = useState(originalName);
@@ -27,7 +26,7 @@ function RenameInput(props) {
   } = useContext(AppContext);
 
   const handleClick = useCallback(
-    async (e) => {
+    async () => {
       try {
         if (fileName === originalName) return;
         const newPath =

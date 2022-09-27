@@ -25,7 +25,11 @@ function Display(props) {
       )}
 
       {mode === "delete" && (
-        <DeleteConfirm content={content} disappear={props.disappear} />
+        <DeleteConfirm
+          content={content}
+          disappear={props.disappear}
+          entFullName={props.entFullName}
+        />
       )}
     </div>
   );
