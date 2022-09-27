@@ -3,7 +3,12 @@ import { useNavigate, useResolvedPath } from "react-router-dom";
 import download from "downloadjs";
 import ContextMenu from "../inner component/ContextMenu";
 import Display from "../inner component/Display";
-import { downloadFile, getContents, getInfo } from "../utilities/fetchUtils";
+import {
+  downloadFile,
+  getContents,
+  getInfo,
+  uploadFile,
+} from "../utilities/fetchUtils";
 import { getExtension } from "../utilities/reactUtils";
 import { AppContext } from "../App";
 
@@ -23,6 +28,8 @@ function Folder(props) {
   const [showMenu, setShowMenu] = useState(false);
   const [display, setDisplay] = useState({ mode: "", content: "" });
   const [showDisplay, setShowDisplay] = useState(false);
+
+  const fileInput = useRef();
 
   const {
     "PATH:TYPE": [, setPathType],
@@ -170,6 +177,39 @@ function Folder(props) {
           )}
         />
       )}
+
+      <form
+        onSubmit={async (e) => {
+          e.preventDefault();
+          try {
+            const files = fileInput.current.files;
+            const formData = new FormData();
+            for (let file of files) {
+              formData.append("file", file);
+              formData.append("type", "upload");
+            }
+            const [data, ok, status] = await uploadFile(pathname, formData);
+            if (!ok) throw new Error(status + " " + data);
+            setDirContents(pathname, data);
+          } catch (error) {
+            console.error(error);
+            navigate(`/error/${error.message.toLowerCase()}`);
+          }
+        }}
+      >
+        <label htmlFor="upload-file">Upload new File</label>
+        <input type="file" name="uploadFile" id="upload-file" ref={fileInput} />
+        <button>UPLOAD</button>
+      </form>
+
+      <button
+        onClick={() => {
+          setDisplay({ mode: "create", content: "" });
+          setShowDisplay(true);
+        }}
+      >
+        Create new file (SVG goes here)
+      </button>
 
       <table>
         <thead>

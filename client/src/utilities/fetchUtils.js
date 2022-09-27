@@ -111,6 +111,21 @@ async function downloadFile(pathname) {
   }
 }
 
+async function uploadFile(pathname, formData) {
+  try {
+    
+    const res = await fetch(`${SERVER_URL}/api/drive${pathname}`, {
+      method: "POST",
+      body: formData,
+    });
+    console.log("Sent POST (Upload) Request!");
+    const data = await res.json();
+    return [data, res.ok, res.status];
+  } catch (error) {
+    return [null, false, error.message];
+  }
+}
+
 export {
   getType,
   getContents,
@@ -119,4 +134,5 @@ export {
   deleteEntity,
   copyEntity,
   downloadFile,
+  uploadFile,
 };

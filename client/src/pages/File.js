@@ -82,7 +82,7 @@ function File(props) {
       fileName,
       content,
       navigate,
-      pathsToType, //!
+      pathsToType,
       setDirContents,
       setFileContents,
       setPathInfo,
