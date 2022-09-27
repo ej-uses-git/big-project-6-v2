@@ -5,7 +5,7 @@ const path = require("path");
 
 const users = require("../userdata/userdata.json");
 const handleError = require("../utilities/errorHandler");
-const { encryptPassword, encryptFromKey } = require("../utilities/loginUtils");
+const { encryptFromKey } = require("../utilities/loginUtils");
 
 // POST a new user
 // POST /api/userinfo/register

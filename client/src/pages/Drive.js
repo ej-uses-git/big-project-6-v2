@@ -1,5 +1,5 @@
 import { useContext, useState, useEffect } from "react";
-import { useParams, useNavigate, Outlet } from "react-router-dom";
+import { useParams, useNavigate, Outlet, Link } from "react-router-dom";
 import { AppContext } from "../App";
 
 function Drive() {
@@ -19,6 +19,14 @@ function Drive() {
 
   return (
     <div className="drive">
+      <Link
+        to="/login"
+        onClick={() => {
+          localStorage.removeItem("currentUser");
+        }}
+      >
+        <button>Log Out</button>
+      </Link>
       <h1>Welcome {user}</h1>
       <Outlet />
     </div>

@@ -1,5 +1,5 @@
 import { useCallback, useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { registerUser } from "../utilities/fetchUtils";
 import { encryptPassword } from "../utilities/registerUtils";
 
@@ -111,6 +111,7 @@ function Register(props) {
 
         <button type="submit">REGISTER</button>
       </form>
+      Already signed up? <Link to="/login">Log in here!</Link>
     </div>
   );
 }

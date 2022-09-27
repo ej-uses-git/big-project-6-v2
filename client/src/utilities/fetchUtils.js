@@ -159,6 +159,23 @@ async function registerUser(body) {
   }
 }
 
+async function loginUser(body) {
+  try {
+    const raw = JSON.stringify(body);
+    const res = await fetch(`${SERVER_URL}/api/userinfo/login`, {
+      method: "POST",
+      body: raw,
+      redirect: "follow",
+      headers: new Headers({ "Content-type": "application/json" }),
+    });
+    if (res.ok) return true;
+    else return false;
+  } catch (error) {
+    console.error(error);
+    return error;
+  }
+}
+
 export {
   getType,
   getContents,
@@ -170,4 +187,5 @@ export {
   uploadFile,
   createFile,
   registerUser,
+  loginUser,
 };
