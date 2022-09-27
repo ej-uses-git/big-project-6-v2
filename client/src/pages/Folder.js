@@ -1,8 +1,9 @@
 import { useEffect, useState, useCallback, useRef, useContext } from "react";
 import { useNavigate, useResolvedPath } from "react-router-dom";
+import download from "downloadjs";
 import ContextMenu from "../inner component/ContextMenu";
 import Display from "../inner component/Display";
-import { getContents, getInfo } from "../utilities/fetchUtils";
+import { downloadFile, getContents, getInfo } from "../utilities/fetchUtils";
 import { getExtension } from "../utilities/reactUtils";
 import { AppContext } from "../App";
 
@@ -59,6 +60,7 @@ function Folder(props) {
     async (e) => {
       try {
         const { title } = e.target;
+        let data, ok, status;
         switch (title) {
           case "info":
             // get info
@@ -68,8 +70,8 @@ function Folder(props) {
               setShowDisplay(true);
               return;
             }
-            const [data, ok, status] = await getInfo(pathname + hasContext);
-            if (!ok) throw new Error(status + "\n " + data);
+            [data, ok, status] = await getInfo(pathname + hasContext);
+            if (!ok) throw new Error(status + " " + data);
             setDisplay({ mode: "info", content: data });
             setPathInfo(pathname + hasContext, data);
             setShowDisplay(true);
@@ -95,6 +97,9 @@ function Folder(props) {
             break;
           case "download":
             // get download
+            [data, ok, status] = await downloadFile(pathname + hasContext);
+            if (!ok) throw new Error(status + " " + data);
+            download(data, hasContext);
             break;
           default:
             console.error(new Error("What the fuck?"));

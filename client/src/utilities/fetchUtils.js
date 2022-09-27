@@ -94,4 +94,29 @@ async function copyEntity(pathname, newName) {
   }
 }
 
-export { getType, getContents, editEntity, getInfo, deleteEntity, copyEntity };
+async function downloadFile(pathname) {
+  try {
+    const res = await fetch(
+      `${SERVER_URL}/api/drive${pathname}?mode=download`,
+      {
+        method: "GET",
+        redirect: "follow",
+      }
+    );
+    console.log("Sent GET (Download) Request!");
+    const data = await res.blob();
+    return [data, res.ok, res.status];
+  } catch (error) {
+    return [null, false, error.message];
+  }
+}
+
+export {
+  getType,
+  getContents,
+  editEntity,
+  getInfo,
+  deleteEntity,
+  copyEntity,
+  downloadFile,
+};
