@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, createContext } from "react";
 import {
   BrowserRouter,
   Routes,
@@ -13,6 +13,8 @@ import Error from "./pages/Error";
 import "./App.css";
 import { assignToState } from "./utilities/reactUtils";
 
+export const AppContext = createContext();
+
 function App() {
   useEffect(() => {
     console.log("App mount");
@@ -22,55 +24,35 @@ function App() {
   const [pathsToInfo, setPathsToInfo] = useState({});
   const [dirsToContents, setDirsToContents] = useState({});
   const [filesToContents, setFilesToContents] = useState({});
+  const ContextValues = {
+    "PATH:TYPE": [pathsToType, assignToState(setPathsToType)],
+    "PATH:INFO": [pathsToInfo, assignToState(setPathsToInfo)],
+    "DIR:CONTENT": [dirsToContents, assignToState(setDirsToContents)],
+    "FILE:CONTENT": [filesToContents, assignToState(setFilesToContents)],
+  };
+
+  useEffect(() => {
+    console.log("\n== PATH:TYPE ==\n", pathsToType, "\n");
+  }, [pathsToType]);
 
   return (
     <div className="App">
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Navigate to="/login" />} />
-
-          <Route path="/register" />
-
-          <Route path="/login" />
-
-          <Route path="/error" element={<Outlet />}>
-            <Route path="*" element={<Error />} />
-          </Route>
-
-          <Route path="/:user" element={<Drive />}>
-            <Route
-              index
-              element={
-                <Folder
-                  pathsToType={[pathsToType, assignToState(setPathsToType)]}
-                  pathsToInfo={[pathsToInfo, assignToState(setPathsToInfo)]}
-                  dirsToContents={[
-                    dirsToContents,
-                    assignToState(setDirsToContents),
-                  ]}
-                />
-              }
-            />
-            <Route
-              path="*"
-              element={
-                <Entity
-                  pathsToType={[pathsToType, assignToState(setPathsToType)]}
-                  pathsToInfo={[pathsToInfo, assignToState(setPathsToInfo)]}
-                  dirsToContents={[
-                    dirsToContents,
-                    assignToState(setDirsToContents),
-                  ]}
-                  filesToContents={[
-                    filesToContents,
-                    assignToState(setFilesToContents),
-                  ]}
-                />
-              }
-            />
-          </Route>
-        </Routes>
-      </BrowserRouter>
+      <AppContext.Provider value={ContextValues}>
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<Navigate to="/login" />} />
+            <Route path="/register" />
+            <Route path="/login" />
+            <Route path="/error" element={<Outlet />}>
+              <Route path="*" element={<Error />} />
+            </Route>
+            <Route path="/:user" element={<Drive />}>
+              <Route index element={<Folder />} />
+              <Route path="*" element={<Entity />} />
+            </Route>
+          </Routes>
+        </BrowserRouter>
+      </AppContext.Provider>
     </div>
   );
 }

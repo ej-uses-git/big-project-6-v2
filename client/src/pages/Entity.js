@@ -1,15 +1,18 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { useNavigate, useResolvedPath } from "react-router-dom";
 import Folder from "./Folder";
 import File from "./File";
 import { getType } from "../utilities/fetchUtils";
+import { AppContext } from "../App";
 
 function Entity(props) {
   const navigate = useNavigate();
 
   const [isDir, setIsDir] = useState(null);
 
-  const [pathsToType, setPathType] = props.pathsToType;
+  const {
+    "PATH:TYPE": [pathsToType, setPathType],
+  } = useContext(AppContext);
 
   const { pathname: tempPathname } = useResolvedPath();
   const pathname = tempPathname.endsWith("/")
@@ -19,7 +22,7 @@ function Entity(props) {
   useEffect(() => {
     if (pathsToType[pathname]) return setIsDir(pathsToType[pathname] === "dir");
     setIsDir(null);
-    //? we don't want this to run whenever pathsToType changes, 
+    //? we don't want this to run whenever pathsToType changes,
     //? as it will change upon a rename
     // eslint-disable-next-line
   }, [pathname, setIsDir]);
@@ -43,21 +46,7 @@ function Entity(props) {
 
   return (
     <div className="entity">
-      {isDir !== null &&
-        (isDir ? (
-          <Folder
-            pathsToType={props.pathsToType}
-            pathsToInfo={props.pathsToInfo}
-            dirsToContents={props.dirsToContents}
-          />
-        ) : (
-          <File
-            pathsToType={props.pathsToType}
-            pathsToInfo={props.pathsToInfo}
-            dirsToContents={props.dirsToContents}
-            filesToContents={props.filesToContents}
-          />
-        ))}
+      {isDir !== null && (isDir ? <Folder /> : <File />)}
     </div>
   );
 }

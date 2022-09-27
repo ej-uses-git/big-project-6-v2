@@ -1,3 +1,4 @@
+import DeleteConfirm from "./DeleteConfirm";
 import RenameInput from "./RenameInput";
 
 function Display(props) {
@@ -19,10 +20,12 @@ function Display(props) {
         <RenameInput
           content={content}
           disappear={props.disappear}
-          pathsToType={props.pathsToType}
-          pathsToInfo={props.pathsToInfo}
-          dirsToContents={props.dirsToContents}
+          entFullName={props.entFullName}
         />
+      )}
+
+      {mode === "delete" && (
+        <DeleteConfirm content={content} disappear={props.disappear} />
       )}
     </div>
   );

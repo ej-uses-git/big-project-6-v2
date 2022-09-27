@@ -1,7 +1,8 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useContext, useEffect, useRef, useState } from "react";
 import { Link, useNavigate, useResolvedPath } from "react-router-dom";
 import { createBrowserHistory } from "history";
 import { getContents, editEntity } from "../utilities/fetchUtils";
+import { AppContext } from "../App";
 
 const history = createBrowserHistory();
 
@@ -21,10 +22,18 @@ function File(props) {
   const [content, setContent] = useState("");
   const [fileName, setFileName] = useState(cleanName);
 
-  const [, setPathType] = props.pathsToType;
-  const [, setPathInfo] = props.pathsToInfo;
-  const [, setDirContents] = props.dirsToContents;
-  const [filesToContents, setFileContents] = props.filesToContents;
+  const {
+    "PATH:TYPE": [pathsToType, setPathType],
+  } = useContext(AppContext);
+  const {
+    "PATH:INFO": [, setPathInfo],
+  } = useContext(AppContext);
+  const {
+    "DIR:CONTENT": [, setDirContents],
+  } = useContext(AppContext);
+  const {
+    "FILE:CONTENT": [filesToContents, setFileContents],
+  } = useContext(AppContext);
 
   const originalContents = useRef(filesToContents[pathname] ?? null);
 
@@ -41,37 +50,44 @@ function File(props) {
     }
   }, [pathname, navigate, setFileContents]);
 
-  const handleNameBlur = useCallback(async () => {
-    try {
-      if (fileName === cleanName) return;
-      const [data, ok, status] = await editEntity(pathname, {
-        newName: fileName,
-      });
-      if (!ok) throw new Error(status + " " + data);
-      const newPath =
-        pathWithoutName + fileName + (fileType ? `.${fileType}/` : "/");
-      setPathType(newPath, fileType, pathname + "/");
-      setPathInfo(null, null, pathname);
-      setFileContents(newPath, content, pathname);
-      setDirContents(pathWithoutName, data);
-      history.replace(pathWithoutName + fileName + (fileType ? `.${fileType}` : ""));
-    } catch (error) {
-      console.error(error);
-      navigate(`/error/${error.message.toLowerCase()}`);
-    }
-  }, [
-    pathname,
-    cleanName,
-    fileType,
-    pathWithoutName,
-    fileName,
-    content,
-    navigate,
-    setDirContents,
-    setFileContents,
-    setPathInfo,
-    setPathType,
-  ]);
+  const handleNameBlur = useCallback(
+    async (e) => {
+      try {
+        if (fileName === cleanName) return;
+        const newPath =
+          pathWithoutName + fileName + (fileType ? `.${fileType}/` : "/");
+        if (typeof pathsToType[newPath] === "string")
+          return alert("Please select unique name");
+        const [data, ok, status] = await editEntity(pathname, {
+          newName: fileName,
+        });
+        if (!ok) throw new Error(status + " " + data);
+        setPathType(newPath, fileType, pathname + "/");
+        setPathInfo(null, null, pathname);
+        setFileContents(newPath, content, pathname);
+        setDirContents(pathWithoutName, data);
+        history.replace(
+          pathWithoutName + fileName + (fileType ? `.${fileType}` : "")
+        );
+      } catch (error) {
+        console.error(error);
+        navigate(`/error/${error.message.toLowerCase()}`);
+      }
+    },
+    [
+      pathname,
+      cleanName,
+      fileType,
+      pathWithoutName,
+      fileName,
+      content,
+      navigate,
+      setDirContents,
+      setFileContents,
+      setPathInfo,
+      setPathType,
+    ]
+  );
 
   const handleContentBlur = useCallback(async () => {
     try {

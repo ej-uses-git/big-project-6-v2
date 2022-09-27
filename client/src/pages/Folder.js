@@ -1,9 +1,10 @@
-import { useEffect, useState, useCallback, useRef } from "react";
+import { useEffect, useState, useCallback, useRef, useContext } from "react";
 import { useNavigate, useResolvedPath } from "react-router-dom";
 import ContextMenu from "../inner component/ContextMenu";
 import Display from "../inner component/Display";
 import { getContents, getInfo } from "../utilities/fetchUtils";
 import { getExtension } from "../utilities/reactUtils";
+import { AppContext } from "../App";
 
 function Folder(props) {
   const navigate = useNavigate();
@@ -22,9 +23,15 @@ function Folder(props) {
   const [display, setDisplay] = useState({ mode: "", content: "" });
   const [showDisplay, setShowDisplay] = useState(false);
 
-  const [, setPathType] = props.pathsToType;
-  const [dirsToContents, setDirContents] = props.dirsToContents;
-  const [pathsToInfo, setPathInfo] = props.pathsToInfo;
+  const {
+    "PATH:TYPE": [, setPathType],
+  } = useContext(AppContext);
+  const {
+    "PATH:INFO": [pathsToInfo, setPathInfo],
+  } = useContext(AppContext);
+  const {
+    "DIR:CONTENT": [dirsToContents, setDirContents],
+  } = useContext(AppContext);
 
   const handleContextMenu = useCallback(
     (event) => {
@@ -76,6 +83,8 @@ function Folder(props) {
             break;
           case "delete":
             // show confirmation window
+            setDisplay({ mode: "delete", content: hasContext });
+            setShowDisplay(true);
             // delete on yes
             break;
           case "copy":
@@ -116,8 +125,8 @@ function Folder(props) {
         setDirContents(pathname, data);
         data.forEach(({ name, type }) => {
           let entPath;
-          if (type === "dir" || !type) entPath = pathname + `/${name}/`;
-          else entPath = pathname + `/${name}.${type}/`;
+          if (type === "dir" || !type) entPath = pathname + `${name}/`;
+          else entPath = pathname + `${name}.${type}/`;
           setPathType(entPath, type);
         });
       } catch (error) {
@@ -134,7 +143,7 @@ function Folder(props) {
     )
       return;
     setFolderContents(dirsToContents[pathname]);
-  }, [dirsToContents, pathname]);
+  }, [dirsToContents, pathname, folderContents]);
 
   return (
     <div className="folder">
@@ -149,10 +158,7 @@ function Folder(props) {
         <Display
           display={display}
           disappear={handleClick}
-          pathsToType={props.pathsToType}
-          pathsToInfo={props.pathsToInfo}
-          dirsToContents={props.dirsToContents}
-          entType={folderContents.find(
+          entFullName={folderContents.find(
             (ent) => ent.name + getExtension(ent.type) === hasContext
           )}
         />
