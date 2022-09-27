@@ -46,6 +46,7 @@ function NewFileForm(props) {
     },
     [
       content,
+      disappear,
       fileName,
       navigate,
       pathname,

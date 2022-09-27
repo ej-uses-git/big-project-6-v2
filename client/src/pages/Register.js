@@ -13,55 +13,58 @@ function Register(props) {
   const [passwordA, setPasswordA] = useState("");
   const [passwordB, setPasswordB] = useState("");
 
-  const handleSubmit = useCallback(async (e) => {
-    e.preventDefault();
-    if (passwordA !== passwordB) {
-      passAInput.current.setCustomValidity(
-        "Please ensure the passwords match."
-      );
-      if (!passAInput.current.checkValidity()) {
-        setTimeout(() => {
-          e.target.requestSubmit();
-        }, 0);
-        return;
+  const handleSubmit = useCallback(
+    async (e) => {
+      e.preventDefault();
+      if (passwordA !== passwordB) {
+        passAInput.current.setCustomValidity(
+          "Please ensure the passwords match."
+        );
+        if (!passAInput.current.checkValidity()) {
+          setTimeout(() => {
+            e.target.requestSubmit();
+          }, 0);
+          return;
+        }
       }
-    }
-    const passwordRegex = /^(?=[^a-z]*[a-z])(?=\D*\d)[^:&.~\s]{5,20}$/;
-    if (!passwordRegex.test(passwordA)) {
-      passAInput.current.setCustomValidity(
-        `Please match the following requirements:
+      const passwordRegex = /^(?=[^a-z]*[a-z])(?=\D*\d)[^:&.~\s]{5,20}$/;
+      if (!passwordRegex.test(passwordA)) {
+        passAInput.current.setCustomValidity(
+          `Please match the following requirements:
         Must be 5-20 characters long
         Must contain at least one lower-case letter
         Must contain at least one number
         Must not contain a colon (:); an ampersand (&); a period (.); a tilde (~); or a space`
-      );
-      if (!passAInput.current.checkValidity()) {
-        setTimeout(() => {
-          e.target.requestSubmit();
-        }, 0);
-        return;
+        );
+        if (!passAInput.current.checkValidity()) {
+          setTimeout(() => {
+            e.target.requestSubmit();
+          }, 0);
+          return;
+        }
       }
-    }
-    const usernameRegex = /^[a-z][^\W_]{7,14}$/i;
-    if (!usernameRegex.test(username)) {
-      usernameInput.current
-        .setCustomValidity(`Please match the following requirements:
+      const usernameRegex = /^[a-z][^\W_]{7,14}$/i;
+      if (!usernameRegex.test(username)) {
+        usernameInput.current
+          .setCustomValidity(`Please match the following requirements:
       Must be 8-15 characters and must start with a letter
       May not contain special characters – only letters and numbers`);
-      if (!usernameInput.current.checkValidity()) {
-        setTimeout(() => {
-          e.target.requestSubmit();
-        }, 0);
-        return;
+        if (!usernameInput.current.checkValidity()) {
+          setTimeout(() => {
+            e.target.requestSubmit();
+          }, 0);
+          return;
+        }
       }
-    }
 
-    const body = { [username]: encryptPassword(passwordA) };
-    const res = await registerUser(body);
-    if (!res) return alert("ERROR: Something went wrong :(");
-    localStorage.setItem("currentUser", username);
-    navigate(`/${username}`);
-  });
+      const body = { [username]: encryptPassword(passwordA) };
+      const res = await registerUser(body);
+      if (!res) return alert("ERROR: Something went wrong :(");
+      localStorage.setItem("currentUser", username);
+      navigate(`/${username}`);
+    },
+    [navigate, passwordA, passwordB, username]
+  );
 
   return (
     <div className="register-form">

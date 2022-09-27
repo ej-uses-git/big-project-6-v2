@@ -25,7 +25,7 @@ function Login(props) {
       }, 0);
       return;
     }
-  });
+  }, [navigate, password, username]);
 
   return (
     <div className="login-form">

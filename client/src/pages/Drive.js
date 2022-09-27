@@ -1,4 +1,4 @@
-import { useContext, useState, useEffect } from "react";
+import { useContext, useEffect } from "react";
 import { useParams, useNavigate, Outlet, Link } from "react-router-dom";
 import { AppContext } from "../App";
 
@@ -11,11 +11,10 @@ function Drive() {
 
   useEffect(() => {
     const currentUser = localStorage.getItem("currentUser");
-    if (!currentUser) return navigate("/error/not logged in");
-    // const currentUser = JSON.parse(rawStorage);
-    if (currentUser !== user) return navigate("/error/not logged in");
+    if (!currentUser || currentUser !== user)
+      return navigate("/error/not logged in");
     setPathType(`/${user}/`, "dir");
-  }, []);
+  }, [navigate, setPathType, user]);
 
   return (
     <div className="drive">
