@@ -59,7 +59,7 @@ function Register(props) {
 
       const body = { [username]: encryptPassword(passwordA) };
       const res = await registerUser(body);
-      if (!res) return alert("ERROR: Something went wrong :(");
+      if (!res) return navigate(`/error/something went wrong`);
       localStorage.setItem("currentUser", username);
       navigate(`/${username}`);
     },

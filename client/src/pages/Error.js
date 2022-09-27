@@ -6,7 +6,8 @@ function Error(props) {
   return (
     <div>
       {message}
-      <Link to="/username">Username</Link>
+      <br />
+      <Link to="/login">Log In Here</Link>
     </div>
   );
 }
