@@ -113,12 +113,28 @@ async function downloadFile(pathname) {
 
 async function uploadFile(pathname, formData) {
   try {
-    
     const res = await fetch(`${SERVER_URL}/api/drive${pathname}`, {
       method: "POST",
       body: formData,
     });
     console.log("Sent POST (Upload) Request!");
+    const data = await res.json();
+    return [data, res.ok, res.status];
+  } catch (error) {
+    return [null, false, error.message];
+  }
+}
+
+async function createFile(pathname, body) {
+  try {
+    const raw = JSON.stringify({ ...body, mode: "create" });
+    const res = await fetch(`${SERVER_URL}/api/drive${pathname}`, {
+      method: "POST",
+      body: raw,
+      redirect: "follow",
+      headers: new Headers({ "Content-type": "application/json" }),
+    });
+    console.log("Sent POST (Create) Request!");
     const data = await res.json();
     return [data, res.ok, res.status];
   } catch (error) {
@@ -135,4 +151,5 @@ export {
   copyEntity,
   downloadFile,
   uploadFile,
+  createFile
 };

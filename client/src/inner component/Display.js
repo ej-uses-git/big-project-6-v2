@@ -1,5 +1,6 @@
 import CopyNameInput from "./CopyNameInput";
 import DeleteConfirm from "./DeleteConfirm";
+import NewFileForm from "./NewFileForm";
 import RenameInput from "./RenameInput";
 
 function Display(props) {
@@ -40,6 +41,8 @@ function Display(props) {
           entFullName={props.entFullName}
         />
       )}
+
+      {mode === "create" && <NewFileForm disappear={props.disappear} />}
     </div>
   );
 }
