@@ -54,15 +54,15 @@ function DeleteConfirm(props) {
   ]);
 
   return (
-    <div className="display-confirm">
-      <p className="display-warning">
+    <div className="display-form">
+      <p className="display delete-warning">
         Are you sure? This action cannot be undone!
       </p>
-      <div className="display-delete-buttons">
-        <button onClick={handleDelete} className="display-btn btn smaller">
+      <div className="display delete-buttons">
+        <button onClick={handleDelete} className="delete-btn btn accent">
           YES
         </button>
-        <button className="no btn smaller">NO</button>
+        <button className="delete-btn btn accent">NO</button>
       </div>
     </div>
   );

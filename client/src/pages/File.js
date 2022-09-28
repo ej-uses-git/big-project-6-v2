@@ -111,7 +111,7 @@ function File(props) {
 
   return (
     <div className="file-page">
-      <div className="file-title">
+      <div className="file-header container">
         <input
           type="text"
           value={fileName}
@@ -120,6 +120,7 @@ function File(props) {
           onKeyUp={(e) => {
             if (e.key === "Enter") handleNameBlur();
           }}
+          className="file-name"
         />
         <p>{fileType}</p>
       </div>
@@ -129,7 +130,7 @@ function File(props) {
         value={content}
         onChange={(e) => setContent(e.target.value)}
         onBlur={handleContentBlur}
-        className="file-body"
+        className="file-body primary"
       ></textarea>
     </div>
   );

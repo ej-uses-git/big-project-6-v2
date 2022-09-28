@@ -47,7 +47,7 @@ function Folder(props) {
     (event) => {
       event.preventDefault();
       setSelected(event.target.parentNode.title);
-      setAnchorPoint({ x: event.clientX, y: event.clientY });
+      setAnchorPoint({ x: event.pageX, y: event.pageY });
       setHasContext(event.target.parentNode.title);
       setShowMenu(true);
     },
@@ -218,9 +218,10 @@ function Folder(props) {
             </tbody>
           </table>
         </div>
+
         <div className="action-buttons">
           <form
-            className="upload-form"
+            className="upload-action"
             onSubmit={async (e) => {
               e.preventDefault();
               try {
@@ -238,43 +239,40 @@ function Folder(props) {
               }
             }}
           >
-            <label htmlFor="upload-file" className="upload-label">
-              Upload new File
+            <label htmlFor="upload-file" className="upload-label accent">
+              Upload New File
             </label>
+            <p>{fileInput.current?.value.split("\\").slice(-1)[0] || "No file selected"}</p>
             <input
               required
               type="file"
               name="uploadFile"
               id="upload-file"
               ref={fileInput}
-              className="file-input"
+              className="hidden"
             />
-            <button
-              className="btn smaller inverted"
-              type="submit"
-              id="submit"
-              style={{ display: "none" }}
-            ></button>
+            <button className="hidden" type="submit" id="submit"></button>
 
             <label htmlFor="submit">
-              <img src={UploadIcon} className="icon" />
+              <img src={UploadIcon} className="upload-icon icon" />
             </label>
           </form>
 
-          <div className="create-file container">
-            <label htmlFor="create" className="create-file-label">
-              Create new file
+          <div className="create-action">
+            <label htmlFor="create" className="accent">
+              Create New File
             </label>
-            <img
-              src={PlusIcon}
-              alt=""
-              className="icon display-icon"
+            <label htmlFor="create">
+              <img src={PlusIcon} alt="" className="icon" />
+            </label>
+            <button
+              className="display hidden"
               id="create"
               onClick={() => {
                 setDisplay({ mode: "create", content: "" });
                 setShowDisplay(true);
               }}
-            />
+            ></button>
           </div>
         </div>
       </div>

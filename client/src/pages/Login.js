@@ -31,12 +31,12 @@ function Login(props) {
   );
 
   return (
-    <div className="user-form form">
-      <h1 className="form-title title">LOG IN</h1>
+    <div className="user-form">
+      <h1 className="title light">LOG IN</h1>
 
       <form action="" onSubmit={handleSubmit} className="form-body">
         <div className="form-container container">
-          <label htmlFor="username" className="form-label">
+          <label htmlFor="username" className="dark">
             Enter username:
           </label>
           <input
@@ -51,12 +51,12 @@ function Login(props) {
               setUsername(e.target.value);
               e.target.setCustomValidity("");
             }}
-            className="form-input"
+            className="form-input primary"
           />
         </div>
 
         <div className="form-container container">
-          <label htmlFor="password" className="form-label">
+          <label htmlFor="password" className="dark">
             Enter password:
           </label>
           <input
@@ -69,17 +69,17 @@ function Login(props) {
               setPassword(e.target.value);
               usernameInput.current.setCustomValidity("");
             }}
-            className="form-input"
+            className="form-input primary"
           />
         </div>
 
-        <button type="submit" className="form-submit btn">
+        <button type="submit" className="form-submit btn accent">
           LOGIN
         </button>
       </form>
-      <div className="form-footer area">
+      <div className="form-footer">
         Not registered?{" "}
-        <Link to="/register" className="form-link link">
+        <Link to="/register" className="link light">
           Sign up here!
         </Link>
       </div>

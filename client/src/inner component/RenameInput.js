@@ -74,19 +74,24 @@ function RenameInput(props) {
 
   return (
     <div className="display-form">
-      <div className="display-holder">
+      <label htmlFor="new-name" className="display accent-light">
+        Please select a new name:
+      </label>
+      <div className="display-holder container">
         <input
-          className="display-input"
+          className="display-input primary"
           type="text"
           value={fileName}
           onChange={(e) => setFileName(e.target.value)}
           onKeyUp={(e) => {
             if (e.key === "Enter") handleClick();
           }}
+          id="new-name"
+          name="newName"
         />
-        <p className="display-type">{fileType}</p>
+        <p className="display-type">{fileType || "dir"}</p>
       </div>
-      <button onClick={handleClick} className="btn smaller">
+      <button onClick={handleClick} className="display-submit btn accent">
         SAVE
       </button>
     </div>

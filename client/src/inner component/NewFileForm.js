@@ -58,27 +58,27 @@ function NewFileForm(props) {
 
   return (
     <form onSubmit={handleSubmit} className="display-form">
-      <div className="display-holder">
-        <label htmlFor="new-name" className="display-label">
-          Enter the file's name:
-        </label>
-        <input
-          type="text"
-          name="fileName"
-          id="new-name"
-          value={fileName}
-          onChange={(e) => {
-            setFileName(e.target.value);
-          }}
-          className="display-input"
-        />
-      </div>
+      <label htmlFor="new-name" className="display accent-light">
+        Enter the file's name:
+      </label>
+      <input
+        required
+        type="text"
+        name="fileName"
+        id="new-name"
+        value={fileName}
+        onChange={(e) => {
+          setFileName(e.target.value);
+        }}
+        className="display-input primary"
+      />
 
-      <div className="display-holder">
-        <label htmlFor="type" className="display-label">
+      <div className="display-holder container type-select">
+        <label htmlFor="type" className="display accent-light">
           Enter the file's type:
         </label>
         <select
+          required
           name="type"
           id="type"
           value={type}
@@ -86,7 +86,7 @@ function NewFileForm(props) {
             setType(e.target.value);
             if (e.target.value === "dir") setContent("");
           }}
-          className="display-select"
+          className="display-select light"
         >
           <option value="txt" className="display-option">
             .txt
@@ -111,10 +111,10 @@ function NewFileForm(props) {
         onChange={(e) => {
           setContent(e.target.value);
         }}
-        className="option"
+        className="display new-file-body light"
       ></textarea>
 
-      <button type="submit" className="display-btn btn smaller">
+      <button type="submit" className="display-submit btn accent">
         CREATE FILE
       </button>
     </form>

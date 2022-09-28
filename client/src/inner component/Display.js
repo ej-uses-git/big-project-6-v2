@@ -7,13 +7,13 @@ import RenameInput from "./RenameInput";
 function Display(props) {
   const { mode, content } = props.display;
   return (
-    <div className="display">
+    <div className="display-popup">
       {mode === "info" && (
         <ul className="display-list">
           {Object.keys(content).map((key) => (
-            <li key={key} className="display-pair">
-              <div className="display-key">{key}:</div>
-              <div className="display-value">{content[key]}</div>
+            <li key={key} className="display kv-pair">
+              <div className="display key">{key}:</div>
+              <div className="display value">{content[key]}</div>
             </li>
           ))}
         </ul>

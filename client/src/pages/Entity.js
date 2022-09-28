@@ -44,9 +44,9 @@ function Entity(props) {
   }, [isDir, navigate, pathname, pathsToType, setPathType]);
 
   return (
-    <div>
+    <>
       {isDir !== null && (isDir ? <Folder /> : <File />)}
-    </div>
+    </>
   );
 }
 

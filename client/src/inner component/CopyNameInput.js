@@ -59,10 +59,10 @@ function CopyNameInput(props) {
 
   return (
     <div className="display-form">
-      <label htmlFor="" className="display-label">
+      <label htmlFor="" className="display accent-light">
         Please select new name:
       </label>
-      <div className="display-holder">
+      <div className="display-holder container">
         <input
           type="text"
           value={fileName}
@@ -70,11 +70,11 @@ function CopyNameInput(props) {
           onKeyUp={(e) => {
             if (e.key === "Enter") handleClick();
           }}
-          className="display-input"
+          className="display-input primary"
         />
-        <p className="display-type">{fileType}</p>
+        <p className="display-type">{fileType || "dir"}</p>
       </div>
-      <button onClick={handleClick} className="display-btn btn smaller">
+      <button onClick={handleClick} className="display-submit btn accent">
         SAVE
       </button>
     </div>

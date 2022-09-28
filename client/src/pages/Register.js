@@ -67,12 +67,12 @@ function Register(props) {
   );
 
   return (
-    <div className="user-form">
-      <h1 className="form-title title">SIGN UP</h1>
+    <div className="user-form register">
+      <h1 className="title light">SIGN UP</h1>
       
-      <form action="" onSubmit={handleSubmit} className="form-body">
+      <form action="" onSubmit={handleSubmit} className="form-body register-body">
         <div className="form-container container">
-          <label htmlFor="username" className="form-label">
+          <label htmlFor="username" className="dark">
             Enter username:
           </label>
           <input
@@ -87,12 +87,12 @@ function Register(props) {
               setUsername(e.target.value);
               e.target.setCustomValidity("");
             }}
-            className="form-input"
+            className="form-input primary"
           />
         </div>
 
         <div className="form-container container">
-          <label htmlFor="password-a" className="form-label">
+          <label htmlFor="password-a" className="dark">
             Enter a password:
           </label>
           <input
@@ -106,12 +106,12 @@ function Register(props) {
               setPasswordA(e.target.value);
               e.target.setCustomValidity("");
             }}
-            className="form-input"
+            className="form-input primary"
           />
         </div>
 
         <div className="form-container container">
-          <label htmlFor="password-b" className="form-label">
+          <label htmlFor="password-b" className="dark">
             Confirm password:
           </label>
           <input
@@ -124,17 +124,17 @@ function Register(props) {
               setPasswordB(e.target.value);
               passAInput.current.setCustomValidity("");
             }}
-            className="form-input"
+            className="form-input primary"
           />
         </div>
 
-        <button type="submit" className="form-submit btn">
+        <button type="submit" className="form-submit btn accent">
           REGISTER
         </button>
       </form>
-      <div className="form-footer" id="register-footer">
+      <div className="form-footer register-footer">
         Already signed up?{" "}
-        <Link to="/login" className="form-link link">
+        <Link to="/login" className="form-link link light">
           Log in here!
         </Link>
       </div>

@@ -1,6 +1,7 @@
 import { useContext, useEffect } from "react";
 import { useParams, useNavigate, Outlet, Link } from "react-router-dom";
 import { AppContext } from "../App";
+import Icon from "../logo.svg";
 
 function Drive() {
   const navigate = useNavigate();
@@ -13,21 +14,23 @@ function Drive() {
     const currentUser = localStorage.getItem("currentUser");
     if (!currentUser || currentUser !== user)
       return navigate("/error/not logged in");
-    if(!pathsToType[`/${user}/`]) setPathType(`/${user}/`, "dir");
+    if (!pathsToType[`/${user}/`]) setPathType(`/${user}/`, "dir");
   }, [navigate, setPathType, user]);
 
   return (
-    <div className="user-page">
+    <div className="logged-in-page">
       <div className="page-header">
-      <div className="fake-logo">Fake logo</div>
-        <h1 className="user-message">Welcome, {user}!</h1>
+        <div className="fake-logo">
+          <img src={Icon} alt="icon" className="icon" />
+        </div>
+        <h1 className="title accent user-message">Welcome, {user}!</h1>
         <Link
           to="/login"
           onClick={() => {
             localStorage.removeItem("currentUser");
           }}
         >
-          <button className="log-out btn inverted smaller">Log Out</button>
+          <button className="log-out btn accent-light">Log Out</button>
         </Link>
       </div>
       <Outlet />
