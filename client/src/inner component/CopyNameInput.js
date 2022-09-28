@@ -26,7 +26,6 @@ function CopyNameInput(props) {
     try {
       if (fileName === originalName) return;
       const newPath = pathname + fileName + (fileType ? `.${fileType}/` : "/");
-      alert(pathsToType[newPath]);
       if (typeof pathsToType[newPath] === "string")
         return alert("Please select unique name");
       const [data, ok, status] = await copyEntity(pathname + content, fileName);
