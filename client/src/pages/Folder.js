@@ -254,7 +254,7 @@ function Folder(props) {
             <button className="hidden" type="submit" id="submit"></button>
 
             <label htmlFor="submit">
-              <img src={UploadIcon} className="upload-icon icon" />
+              <img src={UploadIcon} className="upload-icon icon" alt="" />
             </label>
           </form>
 

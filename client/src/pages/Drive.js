@@ -15,7 +15,7 @@ function Drive() {
     if (!currentUser || currentUser !== user)
       return navigate("/error/not logged in");
     if (!pathsToType[`/${user}/`]) setPathType(`/${user}/`, "dir");
-  }, [navigate, setPathType, user]);
+  }, [navigate, setPathType, user, pathsToType]);
 
   return (
     <div className="logged-in-page">

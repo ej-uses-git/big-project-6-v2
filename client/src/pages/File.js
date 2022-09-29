@@ -1,5 +1,5 @@
 import { useCallback, useContext, useEffect, useRef, useState } from "react";
-import { Link, useNavigate, useResolvedPath } from "react-router-dom";
+import { useNavigate, useResolvedPath } from "react-router-dom";
 import { createBrowserHistory } from "history";
 import { getContents, editEntity } from "../utilities/fetchUtils";
 import { AppContext } from "../App";
